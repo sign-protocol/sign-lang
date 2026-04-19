@@ -1,0 +1,41 @@
+# Inference Rules and Constraints
+# @infer derives new facts from graph state.
+# @constraints expresses structural rules agents must enforce.
+
+# --- Inference rules ---
+
+# Skill trajectory inference from combined AI signals
+@infer skill-trajectory-eroding
+  applies-to: skill
+  when: skill.lifecycleStatus = Declining
+  and: skill.AIImpactCategory = Automated
+  then: skill.trajectorySignal = Eroding
+  confidence: derived
+  src: ontology-rule-007
+
+# Mobility readiness inference from cluster satisfaction
+@infer transition-readiness
+  applies-to: individual
+  when: individual satisfies @cluster:transition:analyst-to-strategist [threshold:2-of-3]
+  then: individual.mobilitySignal = Ready
+  confidence: derived
+  src: mobility-model-v2
+
+# Workforce risk inference from cluster AI exposure
+@infer workforce-cluster-risk
+  applies-to: workforce-segment
+  when: segment.primaryCluster = @cluster:ai-exposure:administrative-core
+  and: cluster.pattern = augmented
+  then: segment.transformationPriority = High
+  confidence: derived
+  src: ai-impact-analysis-v3
+
+
+# --- Constraints ---
+
+@constraints
+  skill
+  mutex: lifecycleStatus=Active AND lifecycleStatus=Deprecated
+  requires: AIImpactCategory IS SET when AiWorkforceReductionPercent > 0
+  forbids: depends_on cycle-length > 3
+  enforced-by: ontology-rule-layer

@@ -1,0 +1,41 @@
+# Cluster Examples — All Four Types
+# Clusters are first-class graph nodes: referenceable in @edges, @infer, and role requirements.
+
+# --- Capability cluster ---
+# Skills that together constitute a higher-order capability.
+# No single member is sufficient. Threshold: all.
+
+@cluster capability:workforce-intelligence [type:capability, threshold:all]
+  skill:workforce-planning + skill:data-analysis + skill:scenario-planning
+  [str:0.9, status:validated, src:sme]
+
+
+# --- Co-occurrence cluster ---
+# Skills that empirically appear together in the labor market.
+# Observational, not structural. Threshold: n-of-m.
+
+@cluster market:data-practitioner [type:cooccurrence, threshold:2-of-3, industry:technology]
+  skill:data-analysis + skill:sql + skill:data-visualization
+  [conf:high, src:labor-market-signal-2026Q1]
+
+
+# --- Transition cluster ---
+# Skills that must be acquired together for a viable career move.
+# Threshold: all. Referenced as a node in the role graph.
+
+@cluster transition:analyst-to-strategist [type:transition, threshold:all]
+  skill:systems-thinking + skill:executive-communication + skill:scenario-planning
+  [from:role:senior-analyst, to:role:strategy-director, conf:high, src:sme]
+
+# Cluster referenced as a node in the edge graph
+@edges role:strategy-director
+  role:strategy-director requires @cluster:transition:analyst-to-strategist [weight:critical]
+
+
+# --- AI impact cluster ---
+# Skills sharing the same automation exposure pattern.
+# Planning unit for transformation scenarios. Threshold: any.
+
+@cluster ai-exposure:administrative-core [type:ai-impact, pattern:augmented, threshold:any]
+  skill:document-review + skill:data-entry + skill:scheduling
+  [AIImpactCategory:Augmented, horizon:near-term, src:ai-impact-analysis-v3]

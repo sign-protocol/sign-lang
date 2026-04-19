@@ -1,0 +1,87 @@
+# Layer 2 — Full Document: WFI-008 Skill Definition Standard
+# Retrieved on demand via get_canon_doc("WFI-008")
+
+@doc WFI-008 [std, active, agents+employees] v2 sha:7d4a1f
+@links WFI-001,WFI-002,WFI-003,WFI-009
+@cycle 90d
+@reviewed 2026-04-14
+
+@vocab
+  depends_on    | skill cannot be effectively applied without target present
+  adjacent_to   | skills frequently co-occur and complement; symmetric
+  progression_to | target represents natural advancement from source
+
+@def skill
+  Atomic, distinct, demonstrable capability enabling effective task performance.
+  Learned through education, training, or experience. Observable through behavior,
+  outcomes, or artifacts. Identity stable across industries and tools.
+
+@props
+  + atomicity        | single bounded unit, not a bundle
+  + distinctness     | clear identity boundary, no semantic overlap
+  + observability    | demonstrable through performance or outputs
+  + trainability     | developable through learning or practice
+  + outcome-rel      | contributes to measurable work outcomes
+  + ctx-independence | identity stable across contexts
+  + prof-measurable  | evaluable at differing mastery levels
+  + canon-resolvable | alternate terms resolve to single canonical ID
+
+@include
+  ? single bounded capability
+  ? demonstrable through execution or outcomes
+  ? intentionally developable
+  ? stable meaning independent of employer or tool
+  ? distinguishable from adjacent skills with clear scope boundary
+
+@exclude
+  ! role, task, job title
+  ! tool, software, hardware, platform
+  ! broad capability bundle
+  ! personality trait or attitude alone
+  ! process step or workflow state
+  ! customer label without distinct canonical capability
+
+@constraints
+  skill
+  mutex: lifecycleStatus=Active AND lifecycleStatus=Deprecated
+  requires: AIImpactCategory IS SET when AiWorkforceReductionPercent > 0
+  forbids: depends_on cycle-length > 3
+  enforced-by: ontology-rule-layer
+
+@rel
+  depends_on    -> Skill [conf:high]
+  adjacent_to   <=> Skill [conf:medium]
+  progression_to -> Skill [conf:high]
+  requires      <- Role [weight:critical]
+  requires      <- Task
+  develops      <- Program
+  demonstrates  <- Individual
+  demonstrates  <- Agent
+
+@attrs required
+  id                    | canonical skill identifier
+  title                 | canonical display name
+  description           | definition text
+  lifecycleStatus       | active | inactive | draft | deprecated
+  version               | semantic version
+  taxonomy/category     | single home in the two-level taxonomy
+  atomicity-validation  | pass | fail | pending
+  scope-boundary-notes  | free text clarifying identity edges
+
+@attrs optional
+  skillType              | technical | interpersonal | cognitive | physical
+  AIImpactCategory       | Automated | Augmented | Amplified | Stable
+  AIImpactRating         | high | medium | low
+  AIImpactMechanism      | free text
+  delegationLevel        | full | supervised | not-delegable
+  transferabilityScore   | 0.0–1.0
+  collaborationIntensity | high | medium | low
+  scarcityLevel          | scarce | available | surplus
+  proficiencyIndicators  | free text
+  assessmentMethods      | free text
+
+@disallowed
+  ! bundled phrases combining multiple capabilities
+  ! titles describing workflow state not capability
+  ! synonyms treated as new canonical skills
+  ! tool names unless capability is distinct from tool familiarity

@@ -1,0 +1,38 @@
+# Layer 1 — Career Highways Canon Corpus Index
+# Always injected into agent system prompt. ~400 tokens for this 9-document corpus.
+
+@canon v1.0 sha:a3f9c2
+
+@doc WFI-001 [ref, active, agents+employees] v1
+@links WFI-002,WFI-003,WFI-004,WFI-008,WFI-009
+## Governed skills ontology; v0.1.1; 8725 canonical skills; Phase 2b crosswalk next
+
+@doc WFI-002 [std, active, agents+employees] v1
+@links WFI-001,WFI-003,WFI-008
+## Canonical entity definitions; skill identity and governance; ontology is system of record
+
+@doc WFI-003 [ref, active, agents+employees] v1
+@links WFI-001,WFI-002
+## Two-level taxonomy; 4 domains, 20 categories; single-home classification enforced
+
+@doc WFI-004 [ref, active, agents+employees] v1
+@links WFI-001,WFI-003
+## Core metric definitions; deployment, activation, commercialization, ontology health
+
+@doc WFI-005 [pol, inactive, agents+employees] v1
+## INACTIVE — do not use as execution authority; pending domain backfill
+
+@doc WFI-006 [pol, active, agents+employees] v1
+@links FOUND-003,REF-001,REF-004,REF-005
+## Agent policy; deterministic orchestration, contract-first, delegation model, audit
+
+@doc WFI-007 [pol, active, agents+employees] v1
+## Source ranking: active specs > standards > authoritative ADRs > repo-local > inferred
+
+@doc WFI-008 [std, active, agents+employees] v2
+@links WFI-001,WFI-002,WFI-003,WFI-009
+## Skill definition; atomic demonstrable capability; inclusion/exclusion; required attrs
+
+@doc WFI-009 [std, active, agents+employees] v1
+@links WFI-001,WFI-002,WFI-003,WFI-008
+## Entity definitions; Role, Work, Task, Capability, Agent, Tool, WorkObject, Evidence
