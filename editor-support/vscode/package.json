@@ -1,0 +1,30 @@
+{
+  "name": "sign-language",
+  "displayName": "SIGN — Sigil Intelligence Graph Notation",
+  "description": "Syntax highlighting for SIGN (.sign) files — the ontology-to-agent contract language by Career Highways.",
+  "version": "1.0.0",
+  "publisher": "career-highways",
+  "engines": { "vscode": "^1.75.0" },
+  "categories": ["Programming Languages"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/career-highways/sign-vscode"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "sign",
+        "aliases": ["SIGN", "sign"],
+        "extensions": [".sign"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "sign",
+        "scopeName": "source.sign",
+        "path": "./syntaxes/sign.tmLanguage.json"
+      }
+    ]
+  }
+}

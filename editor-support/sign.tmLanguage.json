@@ -1,0 +1,148 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "SIGN",
+  "scopeName": "source.sign",
+  "fileTypes": ["sign"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#agent-summary" },
+    { "include": "#sigil-bundle" },
+    { "include": "#sigil-inference" },
+    { "include": "#sigil-constraint" },
+    { "include": "#sigil-relationship" },
+    { "include": "#sigil-cluster" },
+    { "include": "#sigil-governance" },
+    { "include": "#sigil-generic" },
+    { "include": "#operator-symmetric" },
+    { "include": "#operator-crosswalk" },
+    { "include": "#operator-outbound" },
+    { "include": "#operator-inbound" },
+    { "include": "#list-include" },
+    { "include": "#list-exclude" },
+    { "include": "#list-property" },
+    { "include": "#property-bag" },
+    { "include": "#namespace-ref" },
+    { "include": "#key-value" }
+  ],
+  "repository": {
+
+    "comment": {
+      "name": "comment.line.number-sign.sign",
+      "match": "^\\s*#.*$"
+    },
+
+    "agent-summary": {
+      "name": "markup.heading.sign",
+      "match": "^##\\s.*$"
+    },
+
+    "sigil-bundle": {
+      "name": "keyword.control.bundle.sign",
+      "match": "^@canon\\b"
+    },
+
+    "sigil-inference": {
+      "name": "keyword.control.inference.sign",
+      "match": "^@infer\\b"
+    },
+
+    "sigil-constraint": {
+      "name": "keyword.control.constraint.sign",
+      "match": "^@(?:constraints|disallowed|boundary|exclude)\\b"
+    },
+
+    "sigil-relationship": {
+      "name": "keyword.control.relationship.sign",
+      "match": "^@(?:rel|edges|xwalk|vocab|links)\\b"
+    },
+
+    "sigil-cluster": {
+      "name": "keyword.control.cluster.sign",
+      "match": "^@cluster\\b"
+    },
+
+    "sigil-governance": {
+      "name": "keyword.control.governance.sign",
+      "match": "^@(?:doc|status|phases|cycle|reviewed|reserved|attrs)\\b"
+    },
+
+    "sigil-generic": {
+      "name": "keyword.other.sigil.sign",
+      "match": "^@(?:def|props|include|rules|infer)\\b"
+    },
+
+    "operator-symmetric": {
+      "name": "keyword.operator.symmetric.sign",
+      "match": "<=>"
+    },
+
+    "operator-crosswalk": {
+      "name": "keyword.operator.crosswalk.sign",
+      "match": "=>"
+    },
+
+    "operator-outbound": {
+      "name": "keyword.operator.outbound.sign",
+      "match": "->"
+    },
+
+    "operator-inbound": {
+      "name": "keyword.operator.inbound.sign",
+      "match": "<-"
+    },
+
+    "list-include": {
+      "name": "markup.inserted.sign",
+      "match": "^\\s*\\?\\s.*$"
+    },
+
+    "list-exclude": {
+      "name": "markup.deleted.sign",
+      "match": "^\\s*!\\s.*$"
+    },
+
+    "list-property": {
+      "name": "variable.other.property.sign",
+      "match": "^\\s*\\+\\s.*$"
+    },
+
+    "property-bag": {
+      "patterns": [
+        {
+          "name": "meta.property-bag.sign",
+          "begin": "\\[",
+          "end": "\\]",
+          "beginCaptures": { "0": { "name": "punctuation.definition.property-bag.begin.sign" } },
+          "endCaptures":   { "0": { "name": "punctuation.definition.property-bag.end.sign" } },
+          "patterns": [
+            {
+              "name": "meta.kv.sign",
+              "match": "([a-zA-Z_][a-zA-Z0-9_-]*)(:)([^,\\]]+)",
+              "captures": {
+                "1": { "name": "support.type.property-name.sign" },
+                "2": { "name": "punctuation.separator.sign" },
+                "3": { "name": "string.unquoted.value.sign" }
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    "namespace-ref": {
+      "name": "entity.name.tag.sign",
+      "match": "\\b(?:skill|role|cluster|concept|domain|entity):[a-zA-Z0-9_:-]+"
+    },
+
+    "key-value": {
+      "name": "meta.kv.sign",
+      "match": "^\\s+([a-zA-Z_][a-zA-Z0-9_-]*)(:)\\s+(.+)$",
+      "captures": {
+        "1": { "name": "support.type.property-name.sign" },
+        "2": { "name": "punctuation.separator.sign" },
+        "3": { "name": "string.unquoted.value.sign" }
+      }
+    }
+
+  }
+}
