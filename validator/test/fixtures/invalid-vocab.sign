@@ -1,0 +1,16 @@
+# Invalid: predicate used in @rel and @edges not declared in @vocab
+
+@doc TEST-003 [std, active, agents] v1
+## Test document for vocab completeness validation
+
+@vocab
+  depends_on | skill cannot be applied without target present
+
+@rel
+  depends_on    -> Skill [conf:high]
+  adjacent_to   <=> Skill [conf:medium]
+  # adjacent_to used here but not in @vocab — error
+
+@edges skill:workforce-planning
+  skill:workforce-planning depends_on skill:data-analysis [str:0.8, conf:high]
+  skill:workforce-planning adjacent_to skill:org-design [str:0.6, conf:medium]

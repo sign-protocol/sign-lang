@@ -1,0 +1,10 @@
+# Invalid: @rel appears before @vocab — block order violation
+
+@doc TEST-001 [std, active, agents] v1
+@links TEST-002
+
+@rel
+  depends_on -> Skill [conf:high]
+
+@vocab
+  depends_on | skill cannot be applied without target present

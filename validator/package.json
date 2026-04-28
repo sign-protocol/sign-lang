@@ -1,0 +1,15 @@
+{
+  "name": "sign-validator",
+  "version": "1.0.0",
+  "description": "Validator and compiler for SIGN (Sigil Intelligence Graph Notation) v1.0",
+  "bin": {
+    "sign": "./bin/sign.js"
+  },
+  "scripts": {
+    "test": "node --test test/parse.test.js test/validate.test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "Apache-2.0"
+}

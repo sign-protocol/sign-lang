@@ -1,0 +1,9 @@
+# Invalid: @infer rule missing required fields (then: and src: absent)
+
+@doc TEST-002 [std, active, agents] v1
+## Test document for infer completeness validation
+
+@infer incomplete-rule
+  applies-to: skill
+  when: skill.lifecycleStatus = Declining
+  # missing then:, confidence:, src:
