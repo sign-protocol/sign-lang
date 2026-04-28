@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    SIGN file icon — light variant.
+    Used by VS Code on DARK themes.
+    Glyph: stylized "@" sigil (the universal SIGN block prefix) in CH Mint #4BBD9C,
+    with a brighter mint node dot to suggest a graph node.
+  -->
+  <g fill="none" stroke="#6FCAB0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="16" cy="16" r="6.5" />
+    <path d="M22.5 16 v2.5 a2.5 2.5 0 0 0 2.5 2.5 a4 4 0 0 0 4 -4 v-1 a13 13 0 1 0 -5 10.3" />
+  </g>
+  <circle cx="24.5" cy="7.5" r="2.25" fill="#4BBD9C" />
+</svg>

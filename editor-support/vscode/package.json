@@ -1,11 +1,24 @@
 {
   "name": "sign-language",
   "displayName": "SIGN — Sigil Intelligence Graph Notation",
-  "description": "Syntax highlighting for SIGN (.sign) files — the ontology-to-agent contract language by Career Highways.",
-  "version": "1.0.0",
+  "description": "Syntax highlighting and file icons for SIGN — an open notation for governed knowledge: definitions, rules, constraints, relationships, clusters, and inference, expressed in a form AI agents can read and reason over at runtime.",
+  "version": "1.2.3",
   "publisher": "career-highways",
+  "author": "Career Highways | Dr. Joe Shepherd",
+  "license": "Apache-2.0",
+  "icon": "icons/sign-marketplace.png",
   "engines": { "vscode": "^1.75.0" },
   "categories": ["Programming Languages"],
+  "keywords": [
+    "sign",
+    "sigil",
+    "ontology",
+    "knowledge graph",
+    "agent",
+    "governance",
+    "canon",
+    "notation"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/career-highways/sign-vscode"
@@ -16,7 +29,11 @@
         "id": "sign",
         "aliases": ["SIGN", "sign"],
         "extensions": [".sign"],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/sign-file-dark.svg",
+          "dark": "./icons/sign-file-light.svg"
+        }
       }
     ],
     "grammars": [
