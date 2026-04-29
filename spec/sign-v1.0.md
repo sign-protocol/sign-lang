@@ -474,3 +474,7 @@ canon-bundle.sign        # Layer 2: full documents on demand
 canon-manifest.json      # version, sha, doc count, build timestamp
 canon-bundle.sign.sha256 # integrity file
 ```
+
+---
+*SIGN v1.0 · © 2026 Career Highways · MIT License*
+*Whitepaper and citation: https://doi.org/10.17605/OSF.IO/6YZJ7*

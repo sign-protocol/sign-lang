@@ -6,7 +6,7 @@ Syntax highlighting and file icons for **SIGN** (Sigil Intelligence Graph Notati
 
 **SIGN** is an open notation for **governed knowledge** — canonical definitions, numbered rules, constraints, relationships, clusters, and inference — expressed in a form AI agents can read and reason over at runtime. The notation is domain-agnostic: any rule-dense, audit-critical knowledge domain (workforce intelligence, healthcare compliance, brand and marketing governance, financial services risk policy) can be expressed in it.
 
-The format is open (Apache 2.0). The authoritative corpus is governed by Career Highways.
+The format is open (MIT). The authoritative corpus is governed by Career Highways.
 
 > Spec: `sign-lang/spec/sign-v1.0.md` and `sign-lang/spec/sigil-reference.md`  
 > Canon reference: SIGN-001 in `career-highways-canon/sign/SIGN-001.sign`

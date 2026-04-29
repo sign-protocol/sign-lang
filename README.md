@@ -4,6 +4,8 @@
 
 JSON serializes data for machines. SIGN declares knowledge for agents.
 
+[![DOI](https://img.shields.io/badge/DOI-10.17605%2FOSF.IO%2F6YZJ7-blue)](https://doi.org/10.17605/OSF.IO/6YZJ7)
+
 ---
 
 ## The Gap SIGN Fills
@@ -133,11 +135,19 @@ tools: [{
 
 **v1.0 — April 2026**
 
-Originated at [Career Highways](https://careerhighways.com). Open source under Apache 2.0.
+Originated at [Career Highways](https://careerhighways.com). Open source under MIT.
 
 SIGN is production-validated against a 9-document ontology corpus serving multiple agent workflows.
 
 ---
+
+## Citation
+
+If you reference SIGN in research or tooling, please cite:
+
+Shepherd, J. & Career Highways (2026). *SIGN: Sigil Intelligence Graph Notation —
+The Knowledge Contract Layer for the Agentic Enterprise*.
+https://doi.org/10.17605/OSF.IO/6YZJ7
 
 ## Contributing
 

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: "SIGN: Sigil Intelligence Graph Notation"
+message: "If you use SIGN, please cite the whitepaper."
+authors:
+  - family-names: Shepherd
+    given-names: Joe
+    affiliation: Career Highways
+date-released: 2026-04-29
+version: 1.0.0
+doi: 10.17605/OSF.IO/6YZJ7
+url: https://doi.org/10.17605/OSF.IO/6YZJ7
+license: MIT
