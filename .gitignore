@@ -1,3 +1,9 @@
 dist/
 *.sha256
 .DS_Store
+
+sign-whitepaper.docx
+
+# Python
+__pycache__/
+*.pyc
