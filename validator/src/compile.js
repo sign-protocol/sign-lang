@@ -6,6 +6,22 @@ const crypto = require('node:crypto');
 const { parseSource } = require('./parse');
 const { runAllRules } = require('./rules');
 
+// Layer 1 has a hard token budget (spec §8). An @anchor block is summarised into the index,
+// never copied whole: excludes are dropped (Layer 1 is a locator, not an authority) and the
+// include list is capped. (RFC §1.4)
+const INDEX_ANCHOR_MAX = 4;
+
+function summariseAnchor(anchor) {
+  const distinct = [];
+  const seen = new Set();
+  for (const p of anchor.include) {
+    if (!seen.has(p)) { seen.add(p); distinct.push(p); }
+  }
+  if (distinct.length <= INDEX_ANCHOR_MAX) return distinct.join(', ');
+  const shown = distinct.slice(0, INDEX_ANCHOR_MAX).join(', ');
+  return `${shown} (+${distinct.length - INDEX_ANCHOR_MAX})`;
+}
+
 /**
  * Compile all .sign files under sourcePath into the 4 standard artifacts
  * under outputPath:
@@ -67,6 +83,9 @@ async function compile(sourcePath, outputPath) {
     indexLines.push(docLine);
     if (doc.links.length) {
       indexLines.push(`@links ${doc.links.join(',')}`);
+    }
+    if (doc.anchor && doc.anchor.include.length) {
+      indexLines.push(`@anchor ${summariseAnchor(doc.anchor)}`);
     }
     if (doc.summaryLine) {
       indexLines.push(`## ${doc.summaryLine}`);
@@ -133,4 +152,4 @@ async function compile(sourcePath, outputPath) {
   return { ok: true, errors, warnings, summary };
 }
 
-module.exports = { compile };
+module.exports = { compile, summariseAnchor, INDEX_ANCHOR_MAX };

@@ -29,6 +29,7 @@ This is the core design insight. LLM agents parse by pattern recognition and sem
 | `@doc` | Document declaration | Identity, type token, status, audience scope |
 | `## Agent summary` | Compressed summary | One per `@doc` in the index layer — self-contained for retrieval decision-making |
 | `@links` | Related documents | Comma-separated related canon doc IDs. Optionally typed. |
+| `@anchor` | Source coverage binding | The Layer-0 source artifacts this document governs (repository globs, OKF concept paths, or system identifiers). The only content-binding sigil permitted in Layer 1. |
 | `@cycle` | Review cycle | Review cadence in days: `@cycle 60d` |
 | `@reviewed` | Last reviewed | ISO date of last authoritative review |
 
@@ -171,6 +172,22 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 | `customer:` | Customer-imported label — `customer:hr-planning` |
 | `doc:` | Canon document — `doc:WFI-008` |
 
+### 3.7 Anchor Property Keys
+
+Reserved keys on the `@anchor` property bag. Validated by lint, not grammar — unknown keys are
+preserved and warned on, never dropped.
+
+| Key | Name | Meaning |
+|---|---|---|
+| `repo:{id}` | Repository | Source repository the patterns are rooted in |
+| `vcs:{kind}` | Version control | `git` etc. — informs `sign drift` |
+| `okf:{bundle}` | OKF source | Marks an OKF-imported anchor; requires a matching `@xwalk okf:` line |
+| `src:{name}` | Source bundle | Logical name of the imported source |
+
+Patterns under `@anchor` are **opaque strings** — glob, path, OKF-concept-path, or system-identifier
+semantics are resolved by the consumer (`sign coverage` / `sign drift` / the platform), not the
+grammar. `+` adds a coverage pattern; `!` carves one out.
+
 ---
 
 ## 4. Document Anatomy
@@ -194,6 +211,10 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
 ```
 @doc {ID} [{type}, {status}, {audiences}] v{n} sha:{hash}
 @links {related_ids}
+@anchor [{key}:{value}, ...]
+  # source artifacts this document governs (opaque patterns)
+  + {pattern}
+  ! {pattern}
 @cycle {n}d
 @reviewed {date}
 @vocab
@@ -390,6 +411,16 @@ Consumers pin to a specific canon version. They do not silently pick up updates.
 
 Any change to `@def`, `@include`, `@exclude`, `@rules`, `@rel`, `@constraints`, or `@infer` in an existing active document is a breaking change. Major version bump required. Consumers of the affected document must be re-validated before production promotion.
 
+`@anchor` changes are **never meaning-breaking** — they bind a document to source, they do not change what it means. They form a distinct class:
+
+| Class | Trigger | Bump |
+|---|---|---|
+| `meaning-breaking` | change to `@def`/`@include`/`@exclude`/`@rules`/`@rel`/`@constraints`/`@infer` | MAJOR |
+| `coverage-narrowing` | an `@anchor` include removed, or an exclude added that drops covered artifacts | MINOR + DRIFT |
+| `additive` | an `@anchor` include widened, an exclude removed, or new optional content | MINOR / PATCH |
+
+`coverage-narrowing` is not meaning-breaking, but silently un-governing an artifact is itself a governance failure, so it emits a **drift-signal** (`{docId, droppedPatterns, affectedArtifacts}`) even though the version bump is only MINOR. `sign diff` reports it in a `coverage` block.
+
 ### 9.3 Authoring Rules
 
 - SIGN is never authored directly. Humans author markdown. The build pipeline compiles to SIGN.
@@ -427,6 +458,33 @@ SIGN governs its own extension namespace through `@reserved`. This prevents inco
 - The `|` character separates name from description in `@props` and `@attrs`.
 - Lines beginning with `#` are comments. Ignored by the parser.
 - Content is UTF-8. Dates are ISO 8601. Decimal separator is period.
+
+### 10.3 `@anchor` Grammar
+
+`@anchor` binds a document to the Layer-0 source artifacts it governs. The parser treats
+patterns as **opaque strings**; glob/path/symbol semantics are resolved by the consumer (CLI or
+platform), not the grammar. It is dual-layer (`Index | Full`) — the same eligibility class as
+`@doc` and `@links` — and the only content-binding sigil permitted in Layer 1.
+
+```ebnf
+anchor          = anchor-block | anchor-compact
+
+anchor-block    = "@anchor" [ SP property-bag ] NL anchor-entry { anchor-entry }
+anchor-entry    = INDENT ( "+" | "!" ) SP pattern NL
+anchor-compact  = "@anchor" SP pattern { "," SP pattern } NL   ; Layer-1 index form only
+
+property-bag    = "[" kv { "," SP kv } "]"
+kv              = key ":" value
+pattern         = { ANYCHAR - NL }                              ; opaque to the parser
+```
+
+- Emit one anchor per document. A second `@anchor` block is a parse error (`anchor must be
+  singular`) — coverage is a single set per identity.
+- `+` patterns are includes, `!` patterns are excludes; both preserve source order.
+- The **compact** form (single-line, comma-separated) is produced by the compiler for the
+  Layer-1 index only. Authoring it in a full document is a lint error (`ANCHOR004`).
+- The Layer-1 emission drops excludes and caps the include list (see §8); excludes are an
+  authority concern, and Layer 1 is a locator.
 
 ### 10.2 Error Handling
 

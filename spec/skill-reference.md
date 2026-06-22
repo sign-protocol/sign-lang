@@ -19,6 +19,7 @@ for use by the sign-draft skill. Sourced from SIGN whitepaper v1.0.
 | `@doc` | Document identity — type token, status, audience scope, related-document edges |
 | `##` | Agent summary line — one per document in the always-injected index layer |
 | `@links` | Related document graph edges — builds the navigable knowledge graph |
+| `@anchor` | Source-artifact coverage binding — the repository globs / OKF paths this document governs |
 
 ### `@doc` syntax
 
@@ -29,6 +30,24 @@ for use by the sign-draft skill. Sourced from SIGN whitepaper v1.0.
 Type tokens: `std` | `pol` | `ref` | `proc` | `xwalk`
 Status tokens: `active` | `draft` | `deprecated` | `review-pending`
 Audience tokens: `agents` | `employees` | `agents+employees`
+
+### `@anchor` syntax
+
+Binds a document to the Layer-0 source artifacts it governs. Place it immediately after
+`@links`. Patterns are **opaque** — globs, paths, or OKF concept paths; the consumer
+(`sign coverage` / `sign drift`) resolves them. `+` adds coverage, `!` carves it out.
+
+```
+@anchor [repo:platform, vcs:git]
+  + services/billing-core/**
+  + libs/money/**
+  ! **/*.test.ts
+```
+
+Reserved property-bag keys: `repo` | `vcs` | `okf` | `src`. An `okf:`-sourced anchor must have a
+matching `@xwalk okf:... => ...` line (lint `ANCHOR005`). Author the block (`+`/`!`) form only —
+the single-line compact form is the compiler's Layer-1 emission, not an authoring form
+(`ANCHOR004`). One `@anchor` per document.
 
 ---
 
@@ -251,6 +270,10 @@ requiring a major version bump:
 Non-breaking changes (minor version): `@cycle`, `@reviewed`, `@status`, `@links`,
 `@edges` (additions only), `@xwalk` (additions only), `@props` (additions only).
 
+`@anchor` changes are never meaning-breaking. Widening coverage is `additive`; removing an
+include or adding an exclude that drops covered artifacts is `coverage-narrowing` (minor, but it
+emits a drift-signal because silently un-governing source is a governance failure).
+
 Every agent package declaring the affected document must be re-validated before
 production promotion when a breaking change lands.
 
@@ -274,7 +297,7 @@ Use `sha:pending` for unregistered documents. Never fabricate a hash value.
 
 | Layer | Content | Token budget |
 |---|---|---|
-| Layer 1 — Index | `@canon`, `@doc`, `@links`, `##` summary | ~10 tokens per document |
+| Layer 1 — Index | `@canon`, `@doc`, `@links`, `@anchor` (summarised), `##` summary | ~10 tokens per document |
 | Layer 2 — Full document | Complete SIGN structure | 300–500 tokens typical |
 
 The Layer 1 index is always injected into agent context. Layer 2 documents are

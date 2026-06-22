@@ -2,7 +2,7 @@
 
 // Canonical block order from spec §4.2
 const BLOCK_ORDER = [
-  'doc', 'links', 'cycle', 'reviewed', 'vocab', 'def', 'props',
+  'doc', 'links', 'anchor', 'cycle', 'reviewed', 'vocab', 'def', 'props',
   'include', 'exclude', 'rules', 'boundary', 'constraints',
   'cluster', 'infer', 'rel', 'edges', 'xwalk',
   'attrs', 'disallowed', 'phases', 'status', 'reserved',
@@ -34,6 +34,32 @@ function parseClusterSigil(rest) {
   if (!m) return { id: rest.trim(), type: null };
   const typeM = (m[2] || '').match(/type:([\w-]+)/);
   return { id: m[1], type: typeM ? typeM[1] : null };
+}
+
+// @anchor [repo:platform, vcs:git]                    (block form — patterns on following lines)
+// @anchor services/billing-core/**, libs/money/**     (compact form — Layer-1 index only)
+// Returns { source: {key:value}, compactPatterns: string[] }. Patterns are opaque (§1).
+function parseAnchorSigil(rest) {
+  const source = {};
+  let remainder = rest.trim();
+  if (remainder.startsWith('[')) {
+    const end = remainder.indexOf(']');
+    if (end !== -1) {
+      const body = remainder.slice(1, end);
+      for (const kv of body.split(',')) {
+        const idx = kv.indexOf(':');
+        if (idx === -1) continue;
+        const key = kv.slice(0, idx).trim();
+        const val = kv.slice(idx + 1).trim();
+        if (key) source[key] = val;
+      }
+      remainder = remainder.slice(end + 1).trim();
+    }
+  }
+  const compactPatterns = remainder
+    ? remainder.split(',').map(s => s.trim()).filter(Boolean)
+    : [];
+  return { source, compactPatterns };
 }
 
 // Determine if a content line within @edges is an edge declaration
@@ -137,6 +163,8 @@ function parseFile(filePath, content) {
       lineNumber,
       summaryLine: null,
       links: [],
+      anchor: null,        // single AnchorNode: { source, include[], exclude[], compact, lineNumber }
+      xwalkSources: [],    // source prefixes seen in @xwalk (e.g. "okf"), for ANCHOR005
       blockSequence: [],
       vocab: [],
       relDeclarations: [],
@@ -220,6 +248,26 @@ function parseFile(filePath, content) {
         continue;
       }
 
+      if (sigilFull === 'anchor') {
+        ensureDoc(i + 1);
+        if (currentDoc.anchor) {
+          // Coverage is a single set per identity (§1.3). A second block is a parse error.
+          parseErrors.push(`line ${i + 1}: anchor must be singular`);
+        }
+        const { source, compactPatterns } = parseAnchorSigil(rest);
+        startBlock('anchor', null, i + 1);
+        if (!currentDoc.anchor) {
+          currentDoc.anchor = {
+            source,
+            include: compactPatterns.slice(),  // compact list; empty in block form
+            exclude: [],
+            compact: compactPatterns.length > 0,
+            lineNumber: i + 1,
+          };
+        }
+        continue;
+      }
+
       if (sigilFull === 'canon') {
         // Bundle header — not a doc-level block, just skip
         continue;
@@ -271,6 +319,33 @@ function processBlock(doc, sigil, sigilId, lines, endLineNo) {
   const rawLines = lines.map(l => l.text);
 
   switch (sigil) {
+    case 'anchor':
+      // Block form: collect "+" includes and "!" excludes, preserving source order.
+      // Compact form leaves no content lines, so nothing is appended here.
+      if (doc.anchor) {
+        for (const { text } of lines) {
+          const t = text.trimStart();
+          if (t.startsWith('+')) {
+            const pat = t.slice(1).trim();
+            if (pat) doc.anchor.include.push(pat);
+          } else if (t.startsWith('!')) {
+            const pat = t.slice(1).trim();
+            if (pat) doc.anchor.exclude.push(pat);
+          }
+        }
+      }
+      break;
+
+    case 'xwalk':
+      // Capture the source prefix of each mapping (e.g. "okf" from okf:path => ...) for ANCHOR005.
+      for (const { text } of lines) {
+        const t = text.trimStart();
+        if (!t || t.startsWith('#')) continue;
+        const m = t.match(/^([\w-]+):/);
+        if (m) doc.xwalkSources.push(m[1]);
+      }
+      break;
+
     case 'vocab':
       for (const { text } of lines) {
         const t = text.trimStart();

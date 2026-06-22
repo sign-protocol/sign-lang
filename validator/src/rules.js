@@ -1,6 +1,7 @@
 'use strict';
 
 const { BLOCK_RANK } = require('./parse');
+const { excludeIntersectsIncludes } = require('./coverage');
 
 // Each rule returns { errors: string[], warnings: string[] }
 // Bundle-level rules receive all parsed docs from all files.
@@ -184,7 +185,14 @@ function checkIndexBudget(allDocs) {
     const docLine   = `@doc ${doc.id} [${doc.type}, ${doc.status}, ${doc.audiences}] ${doc.version || 'v1'}`;
     const linksLine = doc.links.length ? `@links ${doc.links.join(',')}` : '';
     const summary   = doc.summaryLine ? `## ${doc.summaryLine}` : '';
-    indexChars += docLine.length + linksLine.length + summary.length + 3; // +3 for newlines
+    // The Layer-1 index emits a summarised @anchor line (compile.js, INDEX_ANCHOR_MAX=4).
+    let anchorLine = '';
+    if (doc.anchor && doc.anchor.include.length) {
+      const distinct = [...new Set(doc.anchor.include)];
+      const shown = distinct.slice(0, 4).join(', ');
+      anchorLine = `@anchor ${shown}${distinct.length > 4 ? ` (+${distinct.length - 4})` : ''}`;
+    }
+    indexChars += docLine.length + linksLine.length + anchorLine.length + summary.length + 4; // +newlines
   }
 
   const estimatedTokens = Math.ceil(indexChars / 4);
@@ -227,6 +235,74 @@ function checkStatusEnforcement(allDocs) {
   return { errors: [], warnings };
 }
 
+// ─── Rule: @anchor coverage binding (ANCHOR001/003/004/005) ───────────────────
+// Per-document anchor rules. Corpus-wide overlap (ANCHOR002) is checked separately.
+// Messages follow the house voice: state the problem, name the artifact, give the fix.
+function checkAnchorRules(doc, filePath) {
+  const errors = [];
+  const warnings = [];
+  const a = doc.anchor;
+  if (!a) return { errors, warnings };
+
+  const id = doc.id || filePath;
+
+  // ANCHOR001 — an anchor must govern at least one artifact.
+  if (a.include.length === 0) {
+    errors.push(
+      `${filePath} ANCHOR001 — @anchor governs nothing: it has no '+' patterns. Add a coverage pattern or remove the block.`
+    );
+  }
+
+  // ANCHOR004 — compact form is the Layer-1 index emission, never authored in a full doc.
+  if (a.compact) {
+    errors.push(
+      `${filePath} ANCHOR004 — compact @anchor is for the Layer-1 index only. Use '+' / '!' entries in the full document.`
+    );
+  }
+
+  // ANCHOR003 — an exclusion that cannot overlap any include set has no effect.
+  for (const ex of a.exclude) {
+    if (!excludeIntersectsIncludes(ex, a.include)) {
+      warnings.push(
+        `${filePath} ANCHOR003 — exclusion '${ex}' is outside this document's coverage and has no effect. Remove it or widen the include set.`
+      );
+    }
+  }
+
+  // ANCHOR005 — an OKF-sourced anchor must record import provenance via @xwalk okf:.
+  if (a.source && a.source.okf && !doc.xwalkSources.includes('okf')) {
+    warnings.push(
+      `${filePath} ANCHOR005 — ${id} anchors an OKF source but records no import provenance. Add an '@xwalk okf:... => ...' line.`
+    );
+  }
+
+  return { errors, warnings };
+}
+
+// ─── Rule: @anchor coverage overlap (ANCHOR002, corpus level) ─────────────────
+// A single artifact pattern claimed by two documents is an ambiguous contract.
+// Requires whole-corpus context, so it runs in the corpus pass, not the single-file pass.
+function checkAnchorOverlap(allDocs) {
+  const warnings = [];
+  const byPattern = new Map();   // pattern -> [docId, ...]
+  for (const { doc } of allDocs) {
+    if (!doc.anchor) continue;
+    for (const pat of doc.anchor.include) {
+      if (!byPattern.has(pat)) byPattern.set(pat, []);
+      byPattern.get(pat).push(doc.id || '(anonymous)');
+    }
+  }
+  for (const [pat, ids] of byPattern) {
+    if (ids.length > 1) {
+      const [idA, idB] = ids;
+      warnings.push(
+        `ANCHOR002 — coverage overlap: '${pat}' is governed by both ${idA} and ${idB}. Two contracts on one artifact is ambiguous — narrow one anchor.`
+      );
+    }
+  }
+  return { errors: [], warnings };
+}
+
 // ─── Bundle-level runner ──────────────────────────────────────────────────────
 // allDocs: { doc, filePath }[]
 // options.strictLinks: if true, unresolved @links are errors (used by compile)
@@ -246,6 +322,7 @@ function runAllRules(allDocs, options = {}) {
       checkVocabCompleteness(doc, filePath),
       checkInferCompleteness(doc, filePath),
       checkRefResolution(doc, filePath, allDocIds, allClusterIds, allInferIds, strictLinks),
+      checkAnchorRules(doc, filePath),
     ];
     for (const r of results) {
       errors.push(...r.errors);
@@ -257,6 +334,7 @@ function runAllRules(allDocs, options = {}) {
     checkSymmetricEdges(allDocs),
     checkIndexBudget(allDocs),
     checkStatusEnforcement(allDocs),
+    checkAnchorOverlap(allDocs),
   ];
   for (const r of bundleResults) {
     errors.push(...r.errors);
@@ -274,5 +352,7 @@ module.exports = {
   checkSymmetricEdges,
   checkIndexBudget,
   checkStatusEnforcement,
+  checkAnchorRules,
+  checkAnchorOverlap,
   runAllRules,
 };

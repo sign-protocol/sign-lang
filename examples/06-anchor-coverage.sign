@@ -1,0 +1,24 @@
+# Layer 2 — Full Document: REPO-001 Billing Service Contract
+# Demonstrates @anchor — binding a governed document to the Layer-0 source it covers.
+# Retrieved on demand via get_canon_doc("REPO-001")
+
+@doc REPO-001 [std, active, agents] v1 sha:pending
+@links WFI-008
+@anchor [repo:platform, vcs:git, okf:finance-okf, src:finance-okf]
+  # opaque coverage patterns — globs here, resolved by `sign coverage` / `sign drift`
+  + services/billing-core/**
+  + libs/money/**
+  ! **/*.test.ts
+@def billing-service-contract
+  Governs the billing-core service and the money library it depends on. The contract
+  owns classification and constraint rules for revenue-affecting code paths; tests are
+  excluded because they assert behavior rather than define it.
+@xwalk
+  # OKF import provenance — required whenever @anchor carries an okf: source (ANCHOR005)
+  okf:concepts/services/billing.md => std:billing-service-contract [method:okf-import, type:asserted]
+
+# Layer-1 index emission for the above (produced by the compiler, never authored):
+#   @doc REPO-001 [std, active, agents] v1
+#   @links WFI-008
+#   @anchor services/billing-core/**, libs/money/**
+#   ## Billing service contract; governs billing-core + money lib; tests excluded

@@ -53,7 +53,7 @@
 
     "sigil-relationship": {
       "name": "keyword.control.relationship.sign",
-      "match": "^@(?:rel|edges|xwalk|vocab|links)\\b"
+      "match": "^@(?:rel|edges|xwalk|vocab|links|anchor)\\b"
     },
 
     "sigil-cluster": {

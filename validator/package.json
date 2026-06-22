@@ -6,7 +6,7 @@
     "sign": "./bin/sign.js"
   },
   "scripts": {
-    "test": "node --test test/parse.test.js test/validate.test.js"
+    "test": "node --test test/parse.test.js test/validate.test.js test/anchor.test.js test/diff.test.js test/coverage.test.js test/index-budget.test.js"
   },
   "engines": {
     "node": ">=18.0.0"

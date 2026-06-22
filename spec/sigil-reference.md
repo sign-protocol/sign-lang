@@ -6,6 +6,7 @@
 | `@doc` | Both | Document identity, type, status, audiences |
 | `## {summary}` | Index | Agent summary line — one per `@doc` |
 | `@links` | Both | Related document edges |
+| `@anchor` | Both | Source-artifact coverage binding — repository globs / OKF paths this document governs |
 | `@cycle` | Full | Review cadence |
 | `@reviewed` | Full | Last reviewed date |
 | `@vocab` | Full | Governed relationship type definitions |
@@ -40,10 +41,16 @@
 ## Block Order (enforced by build pipeline)
 
 ```
-@doc → @links → @cycle → @reviewed → @vocab → @def → @props → @include → @exclude
+@doc → @links → @anchor → @cycle → @reviewed → @vocab → @def → @props → @include → @exclude
 → @rules → @boundary → @constraints → @cluster → @infer → @rel → @edges → @xwalk
 → @attrs (required) → @attrs (optional) → @disallowed → @phases → @status → @reserved
 ```
+
+## `@anchor` Property-Bag Keys
+
+Reserved keys (validated by lint, not grammar): `repo` · `vcs` · `okf` · `src`. Patterns are
+opaque strings — glob / path / OKF-concept-path semantics are resolved by the consumer (CLI or
+platform), not the grammar. `+` adds a coverage pattern, `!` excludes one.
 
 ## Document Types
 
