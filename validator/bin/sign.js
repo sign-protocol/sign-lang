@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
-const { execFileSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
+const fs = require('node:fs');
 const { validate } = require('../src/validate');
 const { compile } = require('../src/compile');
 const { parseSource } = require('../src/parse');
@@ -34,8 +35,38 @@ function usage() {
     '  sign coverage <corpus> --root <repo-root> [--format json]',
     '  sign drift    <corpus> --root <repo-root> --since <git-ref>',
     '  sign diff     <corpus> --root <repo-root> --since <git-ref>',
+    '  sign import   okf <okf-dir> -o <out-dir> [--bundle NAME] [--typemap PATH] [--allow-typemap-fallback]',
   ].join('\n'));
   process.exit(1);
+}
+
+// Locate the sign-ingest CLI (a sibling open package). The validator stays dependency-free —
+// it does not import sign-ingest; it discovers and spawns it the same way the ingest package
+// discovers this validator (validator-bridge). Missing => a clear install hint, not a crash.
+function findSignIngestBin() {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const candidates = [
+    path.resolve(__dirname, '..', '..', '..', 'sign-tools', 'packages', 'sign-ingest', 'bin', 'sign-ingest'),
+    path.resolve(process.cwd(), '..', 'sign-tools', 'packages', 'sign-ingest', 'bin', 'sign-ingest'),
+    path.resolve(process.cwd(), 'node_modules', '@sign-tools', 'sign-ingest', 'bin', 'sign-ingest'),
+  ];
+  return candidates.find(p => fs.existsSync(p)) || null;
+}
+
+// `sign import …` delegates to sign-ingest (ingestion lives there; the deterministic OKF
+// Stage-1 importer is @sign-tools/sign-ingest). RFC §2.5.
+function runImport(forwardArgs) {
+  const bin = findSignIngestBin();
+  if (!bin) {
+    console.error('error sign import requires @sign-tools/sign-ingest. Install it or run it directly: sign-ingest import okf …');
+    process.exit(127);
+  }
+  const res = require('node:child_process').spawnSync(
+    process.execPath, [bin, 'import', ...forwardArgs],
+    { stdio: 'inherit', windowsHide: true }
+  );
+  process.exit(res.status == null ? 1 : res.status);
 }
 
 // Parse a corpus into the { doc, filePath }[] shape the analysis modules expect.
@@ -104,6 +135,9 @@ async function main() {
     const since = arg('--since');
     if (!corpus || !since) usage();
     runDiff(corpus, root, since);
+
+  } else if (command === 'import') {
+    runImport(args.slice(1));
 
   } else {
     usage();

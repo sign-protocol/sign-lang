@@ -58,7 +58,11 @@ platform), not the grammar. `+` adds a coverage pattern, `!` excludes one.
 
 ## Status Tokens
 
-`active` · `inactive` · `draft` · `deprecated`
+`active` · `inactive` · `draft` · `deprecated` · `imported`
+
+`imported` marks a machine-imported skeleton (e.g. from an OKF bundle) that is **not yet
+authoritative**. Like `draft`, it is excluded from the published Layer-1 index; an approver
+lands it via the authoring tool, which bumps a real version.
 
 ## Phase Tokens
 
@@ -74,4 +78,21 @@ platform), not the grammar. `+` adds a coverage pattern, `!` excludes one.
 
 ## Namespace Prefixes
 
-`skill:` · `role:` · `cluster:` · `legacy:` · `onet:` · `esco:` · `customer:` · `doc:`
+`skill:` · `role:` · `cluster:` · `legacy:` · `onet:` · `esco:` · `customer:` · `doc:` · `okf:` · `prov:`
+
+## `@xwalk` Crosswalk Conventions
+
+`@xwalk` maps an external/legacy identifier to a canonical id: `source => target [method, conf, type]`.
+Reserved source prefix and method for machine import (no grammar change):
+
+- `okf:` — the source identifier is an OKF concept path, e.g. `okf:concepts/metrics/mrr.md`.
+- `method:okf-import` — distinguishes machine import from `exact` / `mapped` / `alias`.
+
+```
+@xwalk
+  okf:concepts/metrics/mrr.md => metric:monthly-recurring-revenue [method:okf-import, type:asserted]
+```
+
+`ANCHOR005` enforces that an `okf:`-sourced `@anchor` records a matching `@xwalk okf:` line.
+`prov:` ids are provisional, import-time identities (`prov:<bundle>.<slug>`); an approver rebinds
+them to a canonical namespace when landing the doc.

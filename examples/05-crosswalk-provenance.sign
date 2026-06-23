@@ -1,6 +1,7 @@
 # Crosswalk Mappings and Provenance Chains
 # @xwalk resolves legacy, external, and customer terms to canonical IDs.
 # Edge properties carry full epistemic provenance on every fact.
+# Canonical block order: vocab < edges < xwalk.
 
 # --- Vocabulary (required when using predicates in @rel / @edges) ---
 
@@ -13,16 +14,6 @@
   composed_of    | source capability is constituted by target skills as a set
 
 
-# --- Crosswalk identity resolution ---
-
-@xwalk
-  legacy:4421          => skill:workforce-planning [method:exact, type:asserted]
-  onet:2.4.1           => skill:workforce-planning [method:mapped, conf:0.85, src:onet, type:asserted]
-  customer:hr-planning => skill:workforce-planning [method:alias, type:asserted]
-  customer:people-ops-plan => skill:workforce-planning
-    [method:resolved, conf:0.9, type:inferred, rule:customer-resolution-v2]
-
-
 # --- Instance edges with full provenance ---
 
 @edges skill:workforce-planning
@@ -32,10 +23,23 @@
     [str:0.8, conf:high, status:validated, type:asserted,
      provenance:inferred:relationship-miner-v2 -> reviewed:sme-panel-2026Q1 -> validated:onet]
 
-  # Inferred edge — derived by rule, proposed status pending review
+  # Inferred edge — derived by rule, proposed status pending review.
+  # adjacent_to is symmetric (<=> in the canonical Skill @rel), so the reverse edge is required.
   skill:workforce-planning adjacent_to skill:org-design
+    [str:0.6, conf:medium, status:proposed, type:inferred, rule:adjacency-miner-v2]
+  skill:org-design adjacent_to skill:workforce-planning
     [str:0.6, conf:medium, status:proposed, type:inferred, rule:adjacency-miner-v2]
 
   # Context-scoped edge — only valid in healthcare industry context
   skill:workforce-planning depends_on skill:regulatory-knowledge
     [str:0.7, conf:high, when:industry=healthcare, type:asserted, src:sme]
+
+
+# --- Crosswalk identity resolution ---
+
+@xwalk
+  legacy:4421          => skill:workforce-planning [method:exact, type:asserted]
+  onet:2.4.1           => skill:workforce-planning [method:mapped, conf:0.85, src:onet, type:asserted]
+  customer:hr-planning => skill:workforce-planning [method:alias, type:asserted]
+  customer:people-ops-plan => skill:workforce-planning
+    [method:resolved, conf:0.9, type:inferred, rule:customer-resolution-v2]

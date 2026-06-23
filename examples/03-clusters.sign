@@ -1,6 +1,13 @@
 # Cluster Examples — All Four Types
 # Clusters are first-class graph nodes: referenceable in @edges, @infer, and role requirements.
 
+# --- Vocabulary ---
+# Predicates used in the @edges block below must be declared in @vocab (same document).
+
+@vocab
+  requires       | source entity cannot function without the target present
+
+
 # --- Capability cluster ---
 # Skills that together constitute a higher-order capability.
 # No single member is sufficient. Threshold: all.
@@ -27,10 +34,6 @@
   skill:systems-thinking + skill:executive-communication + skill:scenario-planning
   [from:role:senior-analyst, to:role:strategy-director, conf:high, src:sme]
 
-# Cluster referenced as a node in the edge graph
-@edges role:strategy-director
-  role:strategy-director requires @cluster:transition:analyst-to-strategist [weight:critical]
-
 
 # --- AI impact cluster ---
 # Skills sharing the same automation exposure pattern.
@@ -39,3 +42,10 @@
 @cluster ai-exposure:administrative-core [type:ai-impact, pattern:augmented, threshold:any]
   skill:document-review + skill:data-entry + skill:scheduling
   [AIImpactCategory:Augmented, horizon:near-term, src:ai-impact-analysis-v3]
+
+
+# --- Cluster referenced as a node in the edge graph ---
+# @edges follows all @cluster blocks (canonical block order: cluster < edges).
+
+@edges role:strategy-director
+  role:strategy-director requires @cluster:transition:analyst-to-strategist [weight:critical]

@@ -1,6 +1,17 @@
 # Inference Rules and Constraints
-# @infer derives new facts from graph state.
 # @constraints expresses structural rules agents must enforce.
+# @infer derives new facts from graph state.
+# Canonical block order: constraints < infer.
+
+# --- Constraints ---
+
+@constraints
+  skill
+  mutex: lifecycleStatus=Active AND lifecycleStatus=Deprecated
+  requires: AIImpactCategory IS SET when AiWorkforceReductionPercent > 0
+  forbids: depends_on cycle-length > 3
+  enforced-by: ontology-rule-layer
+
 
 # --- Inference rules ---
 
@@ -29,13 +40,3 @@
   then: segment.transformationPriority = High
   confidence: derived
   src: ai-impact-analysis-v3
-
-
-# --- Constraints ---
-
-@constraints
-  skill
-  mutex: lifecycleStatus=Active AND lifecycleStatus=Deprecated
-  requires: AIImpactCategory IS SET when AiWorkforceReductionPercent > 0
-  forbids: depends_on cycle-length > 3
-  enforced-by: ontology-rule-layer
