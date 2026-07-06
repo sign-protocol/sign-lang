@@ -49,6 +49,12 @@ matching `@xwalk okf:... => ...` line (lint `ANCHOR005`). Author the block (`+`/
 the single-line compact form is the compiler's Layer-1 emission, not an authoring form
 (`ANCHOR004`). One `@anchor` per document.
 
+**Codebase-canon convention.** For the four-document codebase pattern
+(`*-ARCH`/`*-DEPS`/`*-OVERVIEW`/`*-STANDARDS`): anchor `*-ARCH` to the source projects
+(`+ src/<Project>.*/**`, excluding tests/bin/obj), `*-DEPS` to its dependency manifest
+(`+ **/*.csproj`, bag key `generated-from:csproj` — *proposed*), and `*-OVERVIEW` to entrypoints
++ `README.md`. Do **not** put a spatial `@anchor` on `*-STANDARDS` (it matches ~every file).
+
 ---
 
 ## Content Sigils
