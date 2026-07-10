@@ -69,7 +69,7 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 | `@cluster` | Skill cluster | Named typed set of skills with threshold semantics. First-class node in the graph. |
 | `@infer` | Inference rule | Governed rule that derives new facts from existing graph state. |
 | `@constraints` | Structural constraints | Rules agents must enforce: mutex, requires, forbids, enforced-by. |
-| `@vocab` | Vocabulary | Governed definitions of all relationship type predicates used in the document. |
+| `@vocab` | Vocabulary | Governed definitions of (a) the relationship-type predicates used in `@rel`/`@edges` and (b) closed controlled value vocabularies — a fixed enum whose member meanings are canon (e.g. a category set). Both take the `name \| meaning` form. A value set that is only *restricted* (membership enforced, meanings not defined) belongs in `@constraints` instead. |
 | `@reserved` | Reserved namespace | Forward roadmap sigils declared but not yet fully specified. |
 
 ### 2.5 Cluster Operator
@@ -161,16 +161,20 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 
 ### 3.6 Namespace Prefixes
 
-| Prefix | Meaning |
+An identifier may carry a `prefix:` namespace declaring which identity space it belongs to —
+`skill:workforce-planning`, `role:data-scientist-ii`, `onet:2.4.1`. Namespaces are **opaque to the
+grammar** and **validated by lint, not grammar**: the set of valid prefixes is registered by the
+**consuming implementation**, not by this specification. SIGN reserves no namespaces of its own.
+
+| Rule | Behaviour |
 |---|---|
-| `skill:` | Canonical skill — `skill:workforce-planning` |
-| `role:` | Role entity — `role:data-scientist-ii` |
-| `cluster:` | Named cluster — `cluster:capability:workforce-intelligence` |
-| `legacy:` | Legacy skill ID — `legacy:4421` |
-| `onet:` | O\*NET reference — `onet:2.4.1` |
-| `esco:` | ESCO reference |
-| `customer:` | Customer-imported label — `customer:hr-planning` |
-| `doc:` | Canon document — `doc:WFI-008` |
+| Unknown prefix | Preserved and warned on, never dropped (forward compatibility). |
+| Prefix meaning | Defined by the consumer's namespace registry; opaque to the parser. |
+| Compound namespace | A prefix value may itself be namespaced — `cluster:capability:workforce-intelligence`. |
+
+The prefixes shown in examples throughout this specification (`skill:`, `role:`, `onet:`, `esco:`,
+`customer:`, `doc:`, …) are **illustrative**, drawn from a workforce-ontology consumer. They are not
+part of the notation; a different consumer registers its own set (identity, taxonomy, interop).
 
 ### 3.7 Anchor Property Keys
 

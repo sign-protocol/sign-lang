@@ -9,7 +9,7 @@
 | `@anchor` | Both | Source-artifact coverage binding — repository globs / OKF paths this document governs |
 | `@cycle` | Full | Review cadence |
 | `@reviewed` | Full | Last reviewed date |
-| `@vocab` | Full | Governed relationship type definitions |
+| `@vocab` | Full | Governed relationship-type predicates and/or closed controlled value vocabularies (`name \| meaning`) |
 | `@def` | Full | Primary canonical definition |
 | `@props` | Full | Named core properties |
 | `@include` | Full | Inclusion criteria |
@@ -78,7 +78,14 @@ lands it via the authoring tool, which bumps a real version.
 
 ## Namespace Prefixes
 
-`skill:` · `role:` · `cluster:` · `legacy:` · `onet:` · `esco:` · `customer:` · `doc:` · `okf:` · `prov:`
+An identifier may carry a `prefix:` namespace declaring its identity space (e.g. `skill:workforce-planning`).
+Prefixes are **opaque to the grammar** and **validated by lint, not grammar** — the set of valid prefixes
+is registered by the **consuming implementation**, not by this notation. SIGN reserves no namespaces of
+its own. Unknown prefixes are preserved and warned on, never dropped (forward compatibility). Prefix
+values may themselves be namespaced (`cluster:capability:workforce-intelligence`).
+
+Prefixes appearing in examples throughout this reference are **illustrative**, drawn from a
+workforce-ontology consumer; they are not part of the notation.
 
 ## `@xwalk` Crosswalk Conventions
 
