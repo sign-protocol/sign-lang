@@ -1,0 +1,41 @@
+name: Bug report
+description: A spec ambiguity/contradiction, or a validator/compiler defect
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Specification (spec/)
+        - Validator / compiler (validator/)
+        - Examples (examples/)
+        - Editor support (editor-support/)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem. For spec issues, quote the section.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: A minimal `.sign` input and the command you ran, if applicable.
+      render: shell
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: SIGN spec version and/or validator commit SHA.

@@ -534,5 +534,5 @@ canon-bundle.sign.sha256 # integrity file
 ```
 
 ---
-*SIGN v1.0 · © 2026 Career Highways · MIT License*
+*SIGN v1.0 · © 2026 Career Highways · Apache License 2.0*
 *Whitepaper and citation: https://doi.org/10.17605/OSF.IO/6YZJ7*
