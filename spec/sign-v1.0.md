@@ -26,7 +26,7 @@ This is the core design insight. LLM agents parse by pattern recognition and sem
 | Sigil | Name | Meaning |
 |---|---|---|
 | `@canon` | Bundle header | Version and SHA-256 hash of the compiled artifact |
-| `@doc` | Document declaration | Identity, type token, status, audience scope |
+| `@doc` | Document declaration | Identity, type token, status, audience scope. May carry a provisional trailing landing-status flag after audiences (e.g. `machine-drafted`; lint, not grammar — see §7). |
 | `## Agent summary` | Compressed summary | One per `@doc` in the index layer — self-contained for retrieval decision-making |
 | `@links` | Related documents | Comma-separated related canon doc IDs. Optionally typed. |
 | `@anchor` | Source coverage binding | The Layer-0 source artifacts this document governs (repository globs, OKF concept paths, or system identifiers). The only content-binding sigil permitted in Layer 1. |
@@ -69,7 +69,7 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 | `@cluster` | Skill cluster | Named typed set of skills with threshold semantics. First-class node in the graph. |
 | `@infer` | Inference rule | Governed rule that derives new facts from existing graph state. |
 | `@constraints` | Structural constraints | Rules agents must enforce: mutex, requires, forbids, enforced-by. |
-| `@vocab` | Vocabulary | Governed definitions of all relationship type predicates used in the document. |
+| `@vocab` | Vocabulary | Governed definitions of (a) the relationship-type predicates used in `@rel`/`@edges` and (b) closed controlled value vocabularies — a fixed enum whose member meanings are canon (e.g. a category set). Both take the `name \| meaning` form. A value set that is only *restricted* (membership enforced, meanings not defined) belongs in `@constraints` instead. |
 | `@reserved` | Reserved namespace | Forward roadmap sigils declared but not yet fully specified. |
 
 ### 2.5 Cluster Operator
@@ -104,7 +104,7 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 | `from:{date}` | Valid from | ISO date edge becomes valid |
 | `to:{date}` | Valid to | ISO date edge expires |
 | `when:{condition}` | Context condition | Constrains edge to specific facet context. Format: `when:industry=healthcare` |
-| `src:{source}` | Evidence source | `sme`, `inferred`, `onet`, `esco`, `labor-market` |
+| `src:{source}` | Evidence source | `sme`, `inferred`, `onet`, `esco`, `labor-market`, `llm-extraction` (an LLM's reading of source), `csproj` (mechanically extracted) |
 | `rule:{id}` | Deriving rule | ID of the `@infer` rule that produced this edge |
 | `provenance:{chain}` | Provenance chain | Full derivation history. Format: `inferred:agent-v2 -> reviewed:sme -> validated:onet` |
 | `weight:{level}` | Importance | `critical`, `high`, `medium`, `low` |
@@ -161,16 +161,20 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 
 ### 3.6 Namespace Prefixes
 
-| Prefix | Meaning |
+An identifier may carry a `prefix:` namespace declaring which identity space it belongs to —
+`skill:workforce-planning`, `role:data-scientist-ii`, `onet:2.4.1`. Namespaces are **opaque to the
+grammar** and **validated by lint, not grammar**: the set of valid prefixes is registered by the
+**consuming implementation**, not by this specification. SIGN reserves no namespaces of its own.
+
+| Rule | Behaviour |
 |---|---|
-| `skill:` | Canonical skill — `skill:workforce-planning` |
-| `role:` | Role entity — `role:data-scientist-ii` |
-| `cluster:` | Named cluster — `cluster:capability:workforce-intelligence` |
-| `legacy:` | Legacy skill ID — `legacy:4421` |
-| `onet:` | O\*NET reference — `onet:2.4.1` |
-| `esco:` | ESCO reference |
-| `customer:` | Customer-imported label — `customer:hr-planning` |
-| `doc:` | Canon document — `doc:WFI-008` |
+| Unknown prefix | Preserved and warned on, never dropped (forward compatibility). |
+| Prefix meaning | Defined by the consumer's namespace registry; opaque to the parser. |
+| Compound namespace | A prefix value may itself be namespaced — `cluster:capability:workforce-intelligence`. |
+
+The prefixes shown in examples throughout this specification (`skill:`, `role:`, `onet:`, `esco:`,
+`customer:`, `doc:`, …) are **illustrative**, drawn from a workforce-ontology consumer. They are not
+part of the notation; a different consumer registers its own set (identity, taxonomy, interop).
 
 ### 3.7 Anchor Property Keys
 
@@ -183,6 +187,7 @@ preserved and warned on, never dropped.
 | `vcs:{kind}` | Version control | `git` etc. — informs `sign drift` |
 | `okf:{bundle}` | OKF source | Marks an OKF-imported anchor; requires a matching `@xwalk okf:` line |
 | `src:{name}` | Source bundle | Logical name of the imported source |
+| `generated-from:{source}` | Generation source *(proposed)* | Marks the anchored content as mechanically generated from the named source (e.g. `csproj`), not authored. **Proposed, not ratified** — see `proposals/2026-07-codebase-canon-reinforcement.md`. |
 
 Patterns under `@anchor` are **opaque strings** — glob, path, OKF-concept-path, or system-identifier
 semantics are resolved by the consumer (`sign coverage` / `sign drift` / the platform), not the
@@ -347,6 +352,13 @@ Ontologies are only trustworthy if you can trace where every fact came from. SIG
 The `type:asserted` / `type:inferred` distinction marks the epistemic status of every edge — explicitly declared by a human or expert system vs derived by an inference rule. Agents treat these differently: asserted edges are governed commitments, inferred edges are soft and revisable.
 
 The `provenance:` chain captures the full derivation history of a fact — who produced it, who reviewed it, what external source validated it.
+
+> **Machine-drafted content (proposed convention).** In codebase-type bundles the descriptive
+> prose is an LLM's reading of the code (`src:llm-extraction`) and must never be marked
+> `type:asserted` — only mechanically-verifiable facts (e.g. `@edges` from csproj,
+> `[type:asserted, src:csproj]`) may. Such documents carry a provisional `machine-drafted`
+> landing-status token in the `@doc` bag until a human landing step clears it. See
+> `proposals/2026-07-codebase-canon-reinforcement.md` (open decisions D-1/D-2).
 
 ```
 @edges skill:workforce-planning

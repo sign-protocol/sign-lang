@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- **Proposal: codebase-canon reinforcement** (`proposals/2026-07-codebase-canon-reinforcement.md`).
+  Provisional/proposed additions, none changing the normative grammar:
+  - `generated-from:` `@anchor` property-bag key *(proposed)* — noted in §3.7.
+  - `machine-drafted` `@doc` landing-status token *(provisional, D-2)* — noted in §2.1/§7.
+  - `src:llm-extraction` recognized evidence-source value; codebase prose must never be
+    `type:asserted` (§7).
+  - Cross-repo edge target convention `codebase.<slug>#<DOC-ID>`.
+  - Open decisions D-1 (parser default for unmarked prose), D-2 (token name), D-3 (coverage
+    denominator), D-4 (normative-doc drift) recorded as open.
+
 ## v1.0.0 — April 2026
 
 Initial open source release.
