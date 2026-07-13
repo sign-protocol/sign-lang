@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question / discussion
+    url: https://github.com/sign-protocol/sign-lang/discussions
+    about: For usage questions and open-ended discussion, please use Discussions.

@@ -2,7 +2,15 @@ dist/
 *.sha256
 .DS_Store
 
+# Whitepaper is distributed via the DOI, not the repo
 sign-whitepaper.docx
+
+# Node
+node_modules/
+package-lock.json
+
+# Built VS Code extension packages (publish via Releases / Marketplace)
+*.vsix
 
 # Python
 __pycache__/

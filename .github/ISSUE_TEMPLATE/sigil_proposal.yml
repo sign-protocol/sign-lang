@@ -1,0 +1,41 @@
+name: Sigil / spec proposal
+description: Propose a new sigil, cluster type, or normative change (required before implementation)
+title: "[proposal] "
+labels: ["proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Per CONTRIBUTING.md, new sigils and normative changes must be proposed
+        and discussed before implementation. The reserved namespace is governed.
+  - type: input
+    id: name
+    attributes:
+      label: Proposed sigil / construct name
+    validations:
+      required: true
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What gap does this fill that existing sigils cannot address?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Worked example
+      description: At least one concrete, real-world example.
+      render: shell
+    validations:
+      required: true
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Is this a breaking change?
+      options:
+        - "No — additive only"
+        - "Yes — changes normative behavior (requires major version bump)"
+        - "Not sure"
+    validations:
+      required: true

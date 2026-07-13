@@ -135,7 +135,7 @@ tools: [{
 
 **v1.0 — April 2026**
 
-Originated at [Career Highways](https://careerhighways.com). Open source under MIT.
+Originated at [Career Highways](https://careerhighways.com). Open source under the Apache License 2.0.
 
 SIGN is production-validated against a 9-document ontology corpus serving multiple agent workflows.
 
