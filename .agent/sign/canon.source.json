@@ -1,0 +1,8 @@
+{
+  "type": "codebase",
+  "slug": "sign-lang",
+  "displayName": "sign-lang — SIGN Specification & Parser",
+  "repo": "sign-lang",
+  "srcDir": ".agent/sign/src",
+  "distDir": ".agent/sign/dist"
+}
