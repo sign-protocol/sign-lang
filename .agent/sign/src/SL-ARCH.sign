@@ -1,0 +1,66 @@
+# Layer 2 — Full Document: SL-ARCH
+# SIGN Language — Parser & Toolchain Architecture
+
+@doc SL-ARCH [std, active, agents+employees] v1 sha:pending
+@links SL-OVERVIEW,SL-DEPS,SL-STANDARDS
+
+@anchor [repo:sign-lang, vcs:git]
+  + validator/src/**
+  + validator/bin/**
+  + validator/test/**
+  + editor-support/**
+  ! validator/test/fixtures/**
+
+@vocab
+  parses        | source module reads .sign text and produces structured document objects
+  validates     | rule engine checks structural and semantic constraints against parsed output
+  compiles      | compiler transforms validated source into Layer 1 index + Layer 2 bundle
+  measures      | coverage module resolves anchor patterns against a repository file tree
+  detects       | drift module identifies source changes not reflected in governing documents
+  classifies    | diff module categorises document changes as additive, coverage-narrowing, or meaning-breaking
+
+@def sign-toolchain
+  Regex-based validator and compiler for SIGN v1.0 documents. The toolchain is
+  dependency-free (zero npm dependencies) and runs on Node.js >=18. It provides six
+  CLI commands: validate, compile, coverage, drift, diff, and import. The parser
+  produces structured document objects (not an AST); an AST-producing parser is
+  deferred to phase 4 alongside LSP support (ADR-0001).
+
+@props
+  + zero-dependencies    | no npm dependencies; Node.js built-ins only (fs, path, crypto, child_process)
+  + regex-based-parser   | line-oriented regex parsing; no AST; structured ParsedDoc objects
+  + canonical-block-order| spec section 4.2 defines sigil ordering; parser and rules enforce it
+  + six-cli-commands     | validate, compile, coverage, drift, diff, import
+  + layer-1-compiler     | emits canon-index.sign with ~400 token budget enforcement
+  + layer-2-compiler     | emits canon-bundle.sign preserving exact authoring (raw file passthrough)
+  + integrity-artifacts  | canon-manifest.json (version, sha, doc count) + .sha256 checksum
+  + anchor-coverage      | glob-to-regexp resolution of @anchor patterns against repository trees
+  + drift-detection      | git-based detection of source changes under anchored documents
+  + diff-classification  | meaning-breaking / coverage-narrowing / additive change classification
+  + import-delegation    | sign import delegates to @sign-tools/sign-ingest (discovered, not imported)
+
+@rules
+  1. Block order: blocks within a document follow canonical order (spec section 4.2):
+     doc, links, anchor, cycle, reviewed, vocab, def, props, include, exclude, rules,
+     boundary, constraints, cluster, infer, rel, edges, xwalk, attrs, disallowed, phases,
+     status, reserved
+  2. Vocab completeness: every predicate used in @rel (outbound/->) or @edges must be
+     declared in @vocab within the same document
+  3. Infer completeness: @infer blocks require when:, then:, confidence:, and src: fields
+  4. Reference resolution: @links targets must resolve to known document IDs; @cluster
+     and rule: references in @edges must resolve to declared @cluster/@infer blocks
+  5. Symmetric edge bidirectionality: predicates declared <=> must appear in both
+     directions across the document set (bundle-level check)
+  6. Index budget: Layer 1 index must not exceed ~400 tokens (chars/4 approximation)
+  7. Status enforcement: active documents must not @link to inactive/deprecated documents
+  8. Anchor coverage (ANCHOR001-005): anchor must govern at least one artifact; no overlap
+     across documents; exclusions must intersect includes; compact form is Layer-1 only;
+     OKF-sourced anchors require @xwalk provenance
+
+@constraints
+  sign-toolchain
+  requires: Node.js >= 18.0.0
+  requires: git checkout for drift and diff commands
+  forbids: external npm dependencies in validator package
+  forbids: AST construction in current parser (deferred to phase 4)
+  enforced-by: validator rule engine (runAllRules) and CI
