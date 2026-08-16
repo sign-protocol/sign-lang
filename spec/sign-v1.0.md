@@ -284,6 +284,14 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
   [later] {phase}: {description}
 @status
   {key}: {value}
+@currency
+  # research currency and verification posture (v1.1)
+  research-pulled: {ISO date}
+  volatility: {high | medium | low}
+  verify-before-use: {yes | no}
+@sources
+  # authoritative citations, one per line (v1.1); url optional
+  {authority} | {citation} | {url}
 @reserved
   {sigil} # {description and target version}
 ```

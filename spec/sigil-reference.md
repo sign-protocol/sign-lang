@@ -26,6 +26,8 @@
 | `@disallowed` | Full | Prohibited patterns |
 | `@phases` | Full | Phase plan |
 | `@status` | Full | Current-state snapshot |
+| `@currency` | Full | Research currency and verification posture (v1.1) |
+| `@sources` | Full | Authoritative citations — `authority \| citation \| url` rows (v1.1) |
 | `@reserved` | Full | Forward roadmap sigil declarations |
 | `->` | Full | Outbound directed edge |
 | `<-` | Full | Inbound directed edge |
@@ -43,7 +45,8 @@
 ```
 @doc → @links → @anchor → @cycle → @reviewed → @vocab → @def → @props → @include → @exclude
 → @rules → @boundary → @constraints → @cluster → @infer → @rel → @edges → @xwalk
-→ @attrs (required) → @attrs (optional) → @disallowed → @phases → @status → @reserved
+→ @attrs (required) → @attrs (optional) → @disallowed → @phases → @status → @currency
+→ @sources → @reserved
 ```
 
 ## `@anchor` Property-Bag Keys

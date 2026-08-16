@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **v1.1 grammar: `@currency` and `@sources` blocks**
+  (`proposals/2026-08-sources-currency-blocks.md`, accepted 2026-08-16). Two new optional
+  full-document blocks ordered after `@status`: `@currency` (research currency —
+  `research-pulled` / `volatility` / `verify-before-use`, `key: value` lines) and `@sources`
+  (authoritative citations, `authority | citation | url` rows). Additive; motivated by the
+  CareerHighways legal corpus, which was routing citations through `@props` and currency
+  through `@status` because the block set was closed. Spec §4.2, sigil reference, and
+  validator `BLOCK_ORDER` updated.
+
 - **Proposal: codebase-canon reinforcement** (`proposals/2026-07-codebase-canon-reinforcement.md`).
   Provisional/proposed additions, none changing the normative grammar:
   - `generated-from:` `@anchor` property-bag key *(proposed)* — noted in §3.7.

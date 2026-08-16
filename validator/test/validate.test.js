@@ -94,3 +94,26 @@ test('validate fails for fixture with undeclared vocab predicate', async () => {
   assert.ok(!result.ok, 'should fail');
   assert.ok(result.errors.some(e => e.includes('adjacent_to')), `expected vocab error, got: ${result.errors.join('; ')}`);
 });
+
+// ── v1.1 blocks: @currency and @sources ──────────────────────────────────────
+
+test('checkBlockOrder accepts @currency and @sources after @status', () => {
+  const { doc, filePath } = fixtureDoc('currency-sources.sign');
+  const { errors } = checkBlockOrder(doc, filePath);
+  assert.equal(errors.length, 0, `unexpected errors: ${errors.join('; ')}`);
+});
+
+test('checkBlockOrder fails when @sources precedes @status', () => {
+  const content = [
+    '@doc TEST-V11-002 [ref, active, agents] v1',
+    '## Sources before status is a block order violation.',
+    '@sources',
+    '  A | B | https://example.test',
+    '@status',
+    '  in-force: yes',
+    '',
+  ].join('\n');
+  const { documents } = parseFile('inline.sign', content);
+  const { errors } = checkBlockOrder(documents[0], 'inline.sign');
+  assert.ok(errors.length > 0, 'expected a block order error');
+});
