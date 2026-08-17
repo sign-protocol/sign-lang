@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **v1.1 grammar: `::` group labels in list blocks**
+  (`proposals/2026-08-list-block-group-labels.md`, accepted 2026-08-16). A line beginning
+  `::` inside `@vocab`, `@attrs`, `@include`, or `@exclude` names the group of entries that
+  follow it — parsed structure, unlike `#` comments, which stay ignored. Additive; motivated
+  by ~82 grouping labels the largest corpus carries as parser-invisible comments.
 - **v1.1 grammar: `@currency` and `@sources` blocks**
   (`proposals/2026-08-sources-currency-blocks.md`, accepted 2026-08-16). Two new optional
   full-document blocks ordered after `@status`: `@currency` (research currency —

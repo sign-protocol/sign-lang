@@ -117,3 +117,23 @@ test('checkBlockOrder fails when @sources precedes @status', () => {
   const { errors } = checkBlockOrder(documents[0], 'inline.sign');
   assert.ok(errors.length > 0, 'expected a block order error');
 });
+
+test(':: group labels in @vocab are structure, not predicates', () => {
+  const content = [
+    '@doc TEST-V11-003 [ref, active, agents] v1',
+    '## Group labels inside vocab must not read as predicate entries.',
+    '@vocab',
+    '  :: Binding strength',
+    '  extends | a content overlay specializes a base',
+    '  :: Citation without inheritance',
+    '  references | points at canon it depends on',
+    '@rel',
+    '  extends -> Document',
+    '  references -> Document',
+    '',
+  ].join('\n');
+  const { documents } = parseFile('inline.sign', content);
+  assert.deepEqual(documents[0].vocab, ['extends', 'references']);
+  const { errors } = checkVocabCompleteness(documents[0], 'inline.sign');
+  assert.equal(errors.length, 0, `unexpected errors: ${errors.join('; ')}`);
+});

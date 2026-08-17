@@ -349,7 +349,8 @@ function processBlock(doc, sigil, sigilId, lines, endLineNo) {
     case 'vocab':
       for (const { text } of lines) {
         const t = text.trimStart();
-        if (!t || t.startsWith('#')) continue;
+        // '::' is a v1.1 group label — named structure, not a predicate entry.
+        if (!t || t.startsWith('#') || t.startsWith('::')) continue;
         const pred = t.split(/\s+/)[0];
         if (pred && /^\w[\w-]*$/.test(pred)) doc.vocab.push(pred);
       }

@@ -39,6 +39,7 @@
 | `[...]` | Full | Property bag |
 | `\|` | Full | Name/description separator |
 | `#` | Full | Comment — ignored by parser |
+| `::` | Full | Group label inside `@vocab`/`@attrs`/`@include`/`@exclude` (v1.1) — parsed, unlike `#` |
 
 ## Block Order (enforced by build pipeline)
 
