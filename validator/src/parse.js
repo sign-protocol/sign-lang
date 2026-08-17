@@ -1,11 +1,11 @@
 'use strict';
 
-// Canonical block order from spec §4.2
+// Canonical block order from spec §4.2 (currency/sources added in v1.1)
 const BLOCK_ORDER = [
   'doc', 'links', 'anchor', 'cycle', 'reviewed', 'vocab', 'def', 'props',
   'include', 'exclude', 'rules', 'boundary', 'constraints',
   'cluster', 'infer', 'rel', 'edges', 'xwalk',
-  'attrs', 'disallowed', 'phases', 'status', 'reserved',
+  'attrs', 'disallowed', 'phases', 'status', 'currency', 'sources', 'reserved',
 ];
 
 const BLOCK_RANK = Object.fromEntries(BLOCK_ORDER.map((s, i) => [s, i]));
@@ -349,7 +349,8 @@ function processBlock(doc, sigil, sigilId, lines, endLineNo) {
     case 'vocab':
       for (const { text } of lines) {
         const t = text.trimStart();
-        if (!t || t.startsWith('#')) continue;
+        // '::' is a v1.1 group label — named structure, not a predicate entry.
+        if (!t || t.startsWith('#') || t.startsWith('::')) continue;
         const pred = t.split(/\s+/)[0];
         if (pred && /^\w[\w-]*$/.test(pred)) doc.vocab.push(pred);
       }

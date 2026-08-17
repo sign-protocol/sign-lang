@@ -1,0 +1,13 @@
+@doc TEST-V11-001 [ref, active, agents] v1
+## A document exercising the v1.1 currency and sources blocks.
+@def
+Exercises the two v1.1 blocks in canonical position.
+@status
+  in-force: yes
+@currency
+  research-pulled: 2026-08-16
+  volatility: high
+  verify-before-use: yes
+@sources
+  US Congress | 29 U.S.C. § 203 | https://uscode.house.gov/view.xhtml?req=(title:29%20section:203)
+  DOL WHD | Fact Sheet 22 | https://www.dol.gov/agencies/whd/fact-sheets/22-flsa-hours-worked

@@ -88,6 +88,7 @@ These sigils elevate SIGN from a notation format to a decision language. They ex
 | `[...]` | Property bag | Edge, cluster, or crosswalk properties. Format: `[key:value, key:value]` |
 | `\|` | Field separator | Separates name from description in `@props` and `@attrs` |
 | `#` | Comment | Line comment. Ignored by parser. |
+| `::` | Group label (v1.1) | Names a group of entries inside `@vocab`, `@attrs`, `@include`, or `@exclude`; entries after it belong to that group until the next `::` or block end. Parsed, unlike `#`. |
 
 ---
 
@@ -224,6 +225,7 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
 @reviewed {date}
 @vocab
   # governed relationship type definitions
+  :: {group label}   # optional grouping (v1.1)
   {predicate} | {definition}
 @def {concept}
   # std and gls documents
@@ -232,10 +234,10 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
   # core properties
   + {name} | {description}
 @include
-  # inclusion criteria
+  # inclusion criteria; :: group labels legal (v1.1)
   ? {criterion}
 @exclude
-  # exclusion criteria
+  # exclusion criteria; :: group labels legal (v1.1)
   ! {criterion}
 @rules
   # operational or classification rules
@@ -273,6 +275,7 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
   # identity resolution mappings
   {ns}:{source} => {ns}:{target} [{method}, {conf}]
 @attrs required
+  :: {group label}   # optional grouping (v1.1)
   {attr} | {description}
 @attrs optional
   {attr} | {description}
@@ -284,6 +287,14 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
   [later] {phase}: {description}
 @status
   {key}: {value}
+@currency
+  # research currency and verification posture (v1.1)
+  research-pulled: {ISO date}
+  volatility: {high | medium | low}
+  verify-before-use: {yes | no}
+@sources
+  # authoritative citations, one per line (v1.1); url optional
+  {authority} | {citation} | {url}
 @reserved
   {sigil} # {description and target version}
 ```
@@ -469,6 +480,10 @@ SIGN governs its own extension namespace through `@reserved`. This prevents inco
 - Inline brackets `[...]` after a relationship or cluster entry contain properties as comma-separated `key:value` pairs.
 - The `|` character separates name from description in `@props` and `@attrs`.
 - Lines beginning with `#` are comments. Ignored by the parser.
+- Lines beginning with `::` inside `@vocab`, `@attrs`, `@include`, or `@exclude` are group
+  labels (v1.1): parsed structure naming the entries that follow, until the next `::` or the
+  end of the block. Unlike `#`, a group label is content — agents may see it. (`@edges` groups
+  via the `group:` bag property instead.)
 - Content is UTF-8. Dates are ISO 8601. Decimal separator is period.
 
 ### 10.3 `@anchor` Grammar
