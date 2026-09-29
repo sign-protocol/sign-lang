@@ -1,0 +1,27 @@
+# Layer 2 — Full Document: SL-DEPS
+# SIGN Language — Dependencies
+
+@doc SL-DEPS [ref, active, agents+employees] v1 sha:pending
+@links SL-OVERVIEW,SL-ARCH
+
+@anchor [repo:sign-lang, vcs:git]
+  + validator/package.json
+
+@props external
+  + node-fs               | file system operations: directory walk, file read/write (Node.js built-in)
+  + node-path             | path resolution and normalisation (Node.js built-in)
+  + node-crypto           | SHA-256 hashing for bundle integrity (Node.js built-in)
+  + node-child-process    | git invocation for drift/diff and sign-ingest delegation (Node.js built-in)
+  + node-test-runner      | test execution via node --test (Node.js built-in, >=18)
+  + git                   | required at runtime for drift, diff, and import commands
+  + sign-ingest           | @sign-tools/sign-ingest discovered at runtime for sign import (not an npm dependency)
+
+@edges sign-lang
+  sign-lang:validator parses sign-lang:sign-files
+    [direction:inbound, format:.sign, method:regex]
+  sign-lang:validator compiles sign-lang:sign-files
+    [direction:outbound, artifacts:canon-index.sign+canon-bundle.sign+canon-manifest.json]
+  sign-lang:validator delegates sign-tools:sign-ingest
+    [command:import, discovery:filesystem-probe, not-imported:true]
+  sign-lang:editor-support highlights sign-lang:sign-files
+    [method:textmate-grammar, editor:vscode, no-runtime:true]

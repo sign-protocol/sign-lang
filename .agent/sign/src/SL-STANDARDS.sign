@@ -1,0 +1,48 @@
+# Layer 2 — Full Document: SL-STANDARDS
+# SIGN Language — Coding & Authoring Standards
+
+@doc SL-STANDARDS [std, active, agents+employees] v1 sha:pending
+@links SL-OVERVIEW,SL-ARCH
+
+@rules
+  1. Zero dependencies: the validator package must not add npm dependencies; use only
+     Node.js built-in modules (fs, path, crypto, child_process)
+  2. Strict mode: every source file begins with 'use strict'
+  3. CommonJS modules: the validator uses require/module.exports, not ES modules
+  4. Node.js test runner: tests use node --test (built-in), not Jest/Mocha/tap
+  5. Spec fidelity: every validation rule maps to a specific spec section; rule
+     implementations cite the section they enforce
+  6. Parse-validate separation: parse.js produces structured objects; rules.js checks
+     them; validate.js orchestrates; compile.js builds output artifacts
+  7. Canonical block order: sigils follow the order defined in spec section 4.2;
+     the parser defines BLOCK_ORDER and BLOCK_RANK as the single source of truth
+  8. Layer-1 token budget: the compiled index must not exceed ~400 tokens; the compiler
+     and rules enforce this via chars/4 approximation
+  9. Anchor pattern opacity: the parser treats @anchor patterns as opaque strings;
+     glob semantics are resolved only by coverage.js against a real repository tree
+  10. Import delegation: sign import discovers and spawns @sign-tools/sign-ingest
+      rather than importing it as a dependency
+  11. SIGN authoring: .sign source documents follow the sigil reference at
+      spec/sigil-reference.md; new sigils must be proposed via issue before implementation
+  12. Reserved namespace: extensions (@pathway, @signal, @benchmark, min:/max:) are
+      tracked under @reserved in the spec; do not implement until formally specified
+
+@disallowed
+  ! external npm dependencies in the validator package
+  ! ES module syntax (import/export) in validator source files
+  ! AST construction in the current parser phase (deferred to phase 4)
+  ! inline validation in the parser — validation lives in rules.js only
+  ! publishing @reserved sigils without a spec amendment and issue approval
+  ! compact @anchor form in authored full documents (Layer-1 emission only)
+  ! symmetric predicates (<=> in @rel) without bidirectional @edges verification
+  ! test frameworks other than Node.js built-in test runner
+
+@constraints
+  sign-standards
+  requires: every new validation rule cites its spec section
+  requires: every CLI command is documented in bin/sign.js usage()
+  requires: BLOCK_ORDER in parse.js matches spec section 4.2 exactly
+  forbids: breaking the zero-dependency contract
+  forbids: skipping the vocab-completeness check for outbound predicates
+  forbids: merging a new sigil without a spec/sigil-reference.md update
+  enforced-by: CI validation (sign validate), code review, ADR process

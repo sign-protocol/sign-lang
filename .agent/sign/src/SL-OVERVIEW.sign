@@ -1,0 +1,49 @@
+# Layer 2 — Full Document: SL-OVERVIEW
+# SIGN Language — Specification & Parser Overview
+
+@doc SL-OVERVIEW [ref, active, agents+employees] v1 sha:pending
+@links SL-ARCH,SL-DEPS,SL-STANDARDS
+
+@anchor [repo:sign-lang, vcs:git]
+  + spec/**
+  + README.md
+  + CONTRIBUTING.md
+  + examples/**
+  + decisions/**
+  ! **/*.test.js
+
+@def sign-lang
+  Open-source specification and toolchain for SIGN (Sigil Intelligence Graph Notation) v1.0.
+  SIGN is a strongly typed, human-readable, token-optimized notation language designed for
+  the agentic consumer. It is the contract layer between a governed knowledge graph and the
+  AI agents that consume it. Every design decision follows from one constraint: the LLM
+  agent context window is the primary unit of consumption.
+
+@props
+  + token-efficiency      | 50-61% token reduction over equivalent JSON
+  + two-layer-delivery    | Layer 1 index (~400 tokens, always injected) + Layer 2 full docs (on-demand)
+  + sigil-semantics       | @-prefixed structural primitives agents parse by pattern recognition
+  + self-describing       | an agent encountering SIGN for the first time infers structure from sigils alone
+  + governance-native     | lifecycle status, versioning, review cycles, provenance built in
+  + relationship-model    | schema-level (@rel) and instance-level (@edges) with full provenance
+  + inference-rules       | @infer derives new facts from graph state with confidence and source
+  + constraint-system     | mutex, requires, forbids — structural rules agents enforce
+  + cluster-semantics     | named typed skill sets with threshold (capability, co-occurrence, transition, AI impact)
+  + vocabulary-governance | @vocab makes the relationship graph self-describing
+
+@boundary
+  SIGN is not a general-purpose serialization format. It does not compete with JSON.
+  JSON serializes data for machines; SIGN declares knowledge for agents. The notation
+  targets a different consumer: the LLM attention mechanism operating within a token budget.
+  The toolchain (validator, compiler, coverage, drift, diff) is open-source under Apache 2.0.
+  The spec lives at spec/sign-v1.0.md; the sigil quick-reference at spec/sigil-reference.md.
+
+@status
+  specVersion:          v1.0
+  specDate:             April 2026
+  license:              Apache-2.0
+  origin:               Career Highways
+  doi:                  10.17605/OSF.IO/6YZJ7
+  productionValidated:  true (9-document ontology corpus, multiple agent workflows)
+  editorSupport:        TextMate grammar (VS Code extension, ADR-0001)
+  lspStatus:            deferred to phase 4 (open-source publication)
