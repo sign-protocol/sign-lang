@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGN for teams: what it changes and how to adopt it</title>
+  <meta name="description" content="What SIGN does for the agents your company runs, a five-step adoption plan, and what stays under your control.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/PlusJakartaSans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/five-deep.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="shell navbar">
+    <a class="sitename" href="../" aria-label="SIGN home"><strong>SIGN</strong><span>Sigil Intelligence Graph Notation</span></a>
+    <nav class="primary" aria-label="Main">
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+      <ul id="nav-list">
+        <li><a href="../engineers/">For engineers</a></li>
+        <li><a href="./" aria-current="page">For teams</a></li>
+        <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/spec/sign-v1.0.md">Specification</a></li>
+        <li><a class="btn btn-primary btn-sm" href="https://github.com/sign-protocol">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero compact" data-ground="dark" aria-labelledby="hero-title">
+    <div class="shell">
+      <span class="eyebrow">For teams and leaders</span>
+      <h1 id="hero-title" class="display-md">Your agents need your company's rules in a form they can check.</h1>
+      <p class="lede">SIGN is a way to write down your company's definitions, rules and relationships so the agents you run can check them, cite them and stay current with them. This page explains what changes, how to try it, and what it costs.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="problem-title">
+    <div class="shell">
+      <div class="section-head">
+        <span class="eyebrow">The problem</span>
+        <h2 id="problem-title">Rules pasted into prompts cause three problems.</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h3>Rules get copied into prompts</h3>
+          <p>Each team pastes its own version of a policy into its own prompts. When the policy changes, nobody knows which copies are out of date.</p>
+        </div>
+        <div class="card">
+          <h3>Agents cannot tell a rule from a note</h3>
+          <p>In a page of prose, a hard limit and a passing remark look the same. The agent has to guess which one it must obey.</p>
+        </div>
+        <div class="card">
+          <h3>Nobody can trace an answer</h3>
+          <p>When an agent acts on a rule, there is often no record of which version it used or where that rule came from.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="paper" aria-labelledby="changes-title">
+    <div class="shell">
+      <div class="section-head">
+        <span class="eyebrow">What SIGN changes</span>
+        <h2 id="changes-title">One written source, in a form agents can check.</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Today</th><th scope="col">With SIGN</th></tr></thead>
+          <tbody>
+            <tr><td>A policy lives in a PDF and in a dozen prompts.</td><td>The policy lives in one SIGN document. Agents read the current version from a compiled bundle, so you update the source, not every copy.</td></tr>
+            <tr><td>A limit is a sentence somewhere in the text.</td><td>A limit is a typed constraint that names what it requires and what it forbids.</td></tr>
+            <tr><td>Retired guidance stays in circulation.</td><td>Each document carries a status. The compiler leaves inactive and deprecated documents out of the bundle.</td></tr>
+            <tr><td>The source of a fact is unknown.</td><td>Each fact is marked as asserted or inferred, with where it came from.</td></tr>
+            <tr><td>Long context is loaded on every call.</td><td>Agents load a short index on every call and fetch full documents only when needed. In the specification's benchmark, one document took 379 tokens in SIGN against 978 in JSON.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="adopt-title">
+    <div class="shell">
+      <div class="section-head">
+        <span class="eyebrow">How to adopt it</span>
+        <h2 id="adopt-title">Start with one body of knowledge and one agent.</h2>
+        <p class="lede">You can hand this plan to an engineer as written. Their side of each step is in the <a href="../engineers/">engineer guide</a>.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-label">Step 1</span>
+          <h3>Pick something small that agents already use.</h3>
+          <p>A refund policy, a product glossary, an approval matrix, or one code repository. Choose something with a clear owner who can say whether the result is right.</p>
+        </li>
+        <li>
+          <span class="step-label">Step 2</span>
+          <h3>Convert it.</h3>
+          <p>Existing documents go through <code>sign-ingest</code>. A code repository goes through the <code>sign-encode-repo</code> skill in Claude Code. New knowledge with no document yet can be drafted with the <code>sign-draft</code> skill. All three are open and run on your own machines.</p>
+        </li>
+        <li>
+          <span class="step-label">Step 3</span>
+          <h3>Have the owner review it.</h3>
+          <p>Treat everything the tools generate as a draft. The owner reads each document, corrects it, and sets its status to active. The validator then checks structure, links and the index size.</p>
+        </li>
+        <li>
+          <span class="step-label">Step 4</span>
+          <h3>Give it to one agent.</h3>
+          <p>The engineer loads the index into that agent's prompt and adds a tool that fetches full documents by ID. Nothing about the model or framework has to change.</p>
+        </li>
+        <li>
+          <span class="step-label">Step 5</span>
+          <h3>Compare the results.</h3>
+          <p>Before you switch, record a baseline: run a handful of real tasks with your current prompts and note the tokens each call used. Then run the same tasks with the SIGN index. Check whether the agent applied the rule, whether it cited the document, and how the token counts compare. Then decide whether to add the next body of knowledge.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="paper" aria-labelledby="faq-title">
+    <div class="shell">
+      <div class="section-head">
+        <span class="eyebrow">Questions teams ask</span>
+        <h2 id="faq-title">Cost, control and stability.</h2>
+      </div>
+      <dl class="faq">
+        <dt>What does it cost?</dt>
+        <dd>The specification and the reference tools are free and open source under the Apache License 2.0. Your costs are the time to convert and review knowledge, and the model usage of the agents that read it.</dd>
+        <dt>Does it tie us to a model or vendor?</dt>
+        <dd>No. SIGN files are plain text in your own repository. Any model that reads text can read them, and the validator is a small Node.js program you can run anywhere.</dd>
+        <dt>Does it replace tools we already pay for?</dt>
+        <dd>SIGN is a file format and a set of open tools, not a platform. It does not require a license from any model or cloud vendor, so the knowledge you write in it stays usable whichever agents and tools you choose later. Whether that lets you drop or downgrade an existing tool depends on what that tool does for you today.</dd>
+        <dt>Does our code or knowledge leave our machines?</dt>
+        <dd>The validator and sign-ingest run locally. The sign-encode-repo skill states in its operating contract that it sends no repository content to a network endpoint and never edits source files. The model you run the Claude Code skills with is your choice and follows your existing terms with that provider.</dd>
+        <dt>Who maintains SIGN?</dt>
+        <dd>Five Deep maintains the specification and reference tools. SIGN began at Career Highways, and version 1.0 was published in April 2026. Changes are proposed and discussed in public issues on GitHub.</dd>
+        <dt>Is it stable enough to build on?</dt>
+        <dd>The specification is at version 1.0, and new sigils go through a proposal before they are added. The reference tools are at version 0.1, so expect them to change faster than the specification.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section aria-labelledby="security-title">
+    <div class="shell">
+      <div class="section-head">
+        <span class="eyebrow">For your security team</span>
+        <h2 id="security-title">A note you can send before anyone runs the tools.</h2>
+        <p class="lede">Running a tool against a code repository usually needs a security review. Copy this note, add your own details, and send it with the links.</p>
+      </div>
+      <div class="codehead"><span class="small muted">Note to your security team</span><button class="copy" type="button">Copy note</button></div>
+<pre><code>We would like to try SIGN, an open specification (Apache 2.0) for writing
+company rules and definitions in a form AI agents can read.
+
+What we plan to run, all on our own machines:
+- The SIGN validator: a Node.js program with no third-party dependencies.
+  It reads .sign files and writes compiled files to a folder we choose.
+- sign-ingest: converts documents we select into .sign files.
+- The sign-encode-repo skill for Claude Code, on one repository. Its
+  operating contract says it writes only to .agent/sign/ and one block in
+  AGENTS.md and CLAUDE.md, never edits source code, sends no repository
+  content to a network endpoint, and redacts secrets before it writes.
+
+The skill runs inside Claude Code, so prompts go to the model provider we
+already use, under our existing terms with that provider.
+
+Source code and the operating contract are public:
+https://github.com/sign-protocol/sign-lang
+https://github.com/sign-protocol/sign-tools
+Maintainer's trust information: https://trust.fivedeep.ai</code></pre>
+      <p class="mt-24">Try the tools on a small or sample repository first. That lets your team check the output before anything runs on your main codebase.</p>
+    </div>
+  </section>
+
+  <section class="paper tight" aria-labelledby="charter-title">
+    <div class="shell">
+      <span class="eyebrow">SIGN in a working product</span>
+      <h2 id="charter-title">See SIGN behind Charter, from Five Deep.</h2>
+      <p class="lede">Charter delivers a company's knowledge and rules to its agents in SIGN. Test Drive Charter is free for 30 days.</p>
+      <div class="actions">
+        <a class="btn btn-primary btn-lg" href="https://charter.fivedeep.ai">Test Drive Charter</a>
+      </div>
+    </div>
+  </section>
+
+  <section data-ground="dark" class="tight" aria-labelledby="close-title">
+    <div class="shell">
+      <span class="eyebrow">Next step</span>
+      <h2 id="close-title">Choose the first body of knowledge, then send an engineer the guide.</h2>
+      <p class="lede">The engineer guide takes about 30 minutes and ends with an agent that loads a SIGN index.</p>
+      <div class="actions">
+        <a class="btn btn-primary btn-lg" href="../engineers/">Open the engineer guide</a>
+        <a class="btn btn-secondary btn-lg" href="https://github.com/sign-protocol/sign-lang/issues">Ask a question on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site" data-ground="dark">
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <img class="footmark" src="../assets/img/logo-fivedeep-hor-neg.svg" alt="Five Deep" width="192" height="40">
+        <p>SIGN is an open specification maintained by Five Deep. The specification and tools are licensed under Apache 2.0.</p>
+      </div>
+      <div>
+        <h2>Start</h2>
+        <ul>
+          <li><a href="../engineers/">For engineers</a></li>
+          <li><a href="./">For teams</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Project</h2>
+        <ul>
+          <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/spec/sign-v1.0.md">Specification</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-lang">sign-lang</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-tools">sign-tools</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Community</h2>
+        <ul>
+          <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-lang/issues">Issues</a></li>
+          <li><a href="https://charter.fivedeep.ai">Test Drive Charter</a></li>
+          <li><a href="https://fivedeep.ai">Five Deep</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="legal">© 2026 Career Highways, Inc. dba Five Deep. SIGN is released under the Apache License 2.0.</p>
+  </div>
+</footer>
+
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
