@@ -1,0 +1,234 @@
+/* Five Deep design tokens
+   Generated from five-deep-tokens.json by build-css.py. Do not edit by hand.
+   Version 1.4.3-draft
+   Tiers: reference holds raw values, system maps them to roles, component maps roles to parts. */
+
+/* Reference tier — raw values. Never used directly in a rule. */
+:root {
+  --fd-brand-midnight: #0B2740;
+  --fd-brand-ai-blue: #0070F3;
+  --fd-brand-human-green: #22C55E;
+  --fd-brand-path-teal: #14A399;
+  --fd-neutral-white: #FFFFFF;
+  --fd-neutral-paper: #F7F9FB;
+  --fd-neutral-line: #DCE5EB;
+  --fd-neutral-muted: #607387;
+  --fd-neutral-body: #486175;
+  --fd-semantic-caution: #8A5A11;
+  --fd-semantic-caution-wash: #FBF2E4;
+  --fd-semantic-a11y-green: #15803D;
+  --fd-slate-50: #F5F6F8;
+  --fd-slate-100: #E5E9ED;
+  --fd-slate-200: #C9D0D8;
+  --fd-slate-300: #A8B4C1;
+  --fd-slate-400: #8597A9;
+  --fd-slate-500: #65798E;
+  --fd-slate-600: #506070;
+  --fd-slate-700: #3B4753;
+  --fd-slate-800: #282F38;
+  --fd-blue-50: #F0F7FF;
+  --fd-blue-100: #D9EAFF;
+  --fd-blue-200: #ADD3FF;
+  --fd-blue-300: #79B7FF;
+  --fd-blue-400: #3C96FF;
+  --fd-blue-500: #0071F4;
+  --fd-blue-600: #0057C2;
+  --fd-blue-700: #004391;
+  --fd-blue-800: #002D62;
+  --fd-green-50: #E7FBEE;
+  --fd-green-100: #C2F4D5;
+  --fd-green-200: #71E69C;
+  --fd-green-300: #23CD62;
+  --fd-green-400: #1EAB52;
+  --fd-green-500: #188941;
+  --fd-green-600: #136C34;
+  --fd-green-700: #0E5127;
+  --fd-green-800: #09361A;
+  --fd-indigo-50: #F5F6FB;
+  --fd-indigo-100: #E6E8F5;
+  --fd-indigo-200: #CBCEEB;
+  --fd-indigo-300: #ABB0DF;
+  --fd-indigo-400: #8A90D2;
+  --fd-indigo-500: #676FC4;
+  --fd-indigo-600: #4A53B9;
+  --fd-indigo-700: #363D8D;
+  --fd-indigo-800: #24295E;
+  --fd-amber-50: #FEF5EE;
+  --fd-amber-100: #FDE4D2;
+  --fd-amber-200: #FAC59D;
+  --fd-amber-300: #F79E5B;
+  --fd-amber-400: #F06F0C;
+  --fd-amber-500: #C0590A;
+  --fd-amber-600: #994608;
+  --fd-amber-700: #723406;
+  --fd-amber-800: #4D2304;
+  --fd-red-50: #FDF4F4;
+  --fd-red-100: #FAE4E3;
+  --fd-red-200: #F5C4C1;
+  --fd-red-300: #EE9E9A;
+  --fd-red-400: #E6726C;
+  --fd-red-500: #DC3930;
+  --fd-red-600: #B4261E;
+  --fd-red-700: #871D17;
+  --fd-red-800: #5C130F;
+  --fd-violet-300: #A98BFA;
+  --fd-violet-500: #8B5CF6;
+  --fd-violet-600: #7C3AED;
+  --fd-dark-0: #0B2740;
+  --fd-dark-1: #102F4B;
+  --fd-dark-2: #163956;
+  --fd-dark-3: #1D4462;
+  --fd-dark-border: #2C4A66;
+}
+
+/* System tier — light ground. These are what components consume. */
+:root {
+  --fd-surface-page: #FFFFFF;
+  --fd-surface-raised: #F7F9FB;
+  --fd-surface-inverse: #0B2740;
+  --fd-text-primary: #0B2740;
+  --fd-text-secondary: #607387;
+  --fd-text-inverse: #FFFFFF;
+  --fd-text-disabled: #8597A9;
+  --fd-text-link: #0057C2;
+  --fd-text-body: #486175;
+  --fd-border-decorative: #DCE5EB;
+  --fd-border-interactive: #607387;
+  --fd-border-strong: #0B2740;
+  --fd-action-primary: #0B2740;
+  --fd-action-primary-hover: #163956;
+  --fd-action-primary-label: #FFFFFF;
+  --fd-action-accent: #0070F3;
+  --fd-action-accent-hover: #0057C2;
+  --fd-action-accent-label: #FFFFFF;
+  --fd-action-accent-pressed: #004391;
+  --fd-feedback-error: #B4261E;
+  --fd-feedback-warning: #8A5A11;
+  --fd-feedback-success: #136C34;
+  --fd-feedback-info: #0057C2;
+  --fd-feedback-tint-error: #FDF4F4;
+  --fd-feedback-tint-warning: #FBF2E4;
+  --fd-feedback-tint-success: #E7FBEE;
+  --fd-feedback-tint-info: #F0F7FF;
+  --fd-accessible-green: #15803D;
+  --fd-focus-ring: #0070F3;
+  --fd-focus-offset: #FFFFFF;
+}
+
+/* System tier — dark ground. Set data-ground='dark' on any dark section. */
+[data-ground='dark'] {
+  --fd-surface-page: #0B2740;
+  --fd-surface-raised: #102F4B;
+  --fd-surface-overlay: #1D4462;
+  --fd-surface-inverse: #FFFFFF;
+  --fd-text-primary: #FFFFFF;
+  --fd-text-secondary: #A8B4C1;
+  --fd-text-inverse: #0B2740;
+  --fd-text-disabled: #65798E;
+  --fd-text-link: #FFFFFF;
+  --fd-border-decorative: #2C4A66;
+  --fd-border-interactive: #65798E;
+  --fd-border-strong: #FFFFFF;
+  --fd-action-primary: #FFFFFF;
+  --fd-action-primary-hover: #DCE8F2;
+  --fd-action-primary-label: #0B2740;
+  --fd-action-accent: #0070F3;
+  --fd-action-accent-hover: #0057C2;
+  --fd-action-accent-label: #FFFFFF;
+  --fd-action-accent-pressed: #004391;
+  --fd-feedback-error: #EE9E9A;
+  --fd-feedback-warning: #F79E5B;
+  --fd-feedback-success: #71E69C;
+  --fd-feedback-info: #79B7FF;
+  --fd-accessible-blue: #3B9DFF;
+  --fd-focus-ring: #0070F3;
+  --fd-focus-offset: #0B2740;
+}
+
+/* Scales — type, space, radius, motion, layout. */
+:root {
+  --fd-radius-sm: 8px;
+  --fd-radius-md: 12px;
+  --fd-radius-lg: 16px;
+  --fd-radius-xl: 20px;
+  --fd-radius-pill: 999px;
+  --fd-motion-micro: 120ms;
+  --fd-motion-base: 180ms;
+  --fd-motion-entrance: 240ms;
+  --fd-motion-overlay: 320ms;
+  --fd-easing-in: cubic-bezier(0.2, 0, 0, 1);
+  --fd-easing-out: cubic-bezier(0.4, 0, 1, 1);
+  --fd-space-4: 4px;
+  --fd-space-8: 8px;
+  --fd-space-12: 12px;
+  --fd-space-16: 16px;
+  --fd-space-20: 20px;
+  --fd-space-24: 24px;
+  --fd-space-32: 32px;
+  --fd-space-40: 40px;
+  --fd-space-48: 48px;
+  --fd-space-64: 64px;
+  --fd-space-80: 80px;
+  --fd-space-96: 96px;
+  --fd-space-128: 128px;
+  --fd-type-display-lg-size: 72px;
+  --fd-type-display-lg-line: 76px;
+  --fd-type-display-lg-weight: 700;
+  --fd-type-display-lg-tracking: -0.045em;
+  --fd-type-display-md-size: 56px;
+  --fd-type-display-md-line: 60px;
+  --fd-type-display-md-weight: 700;
+  --fd-type-display-md-tracking: -0.04em;
+  --fd-type-display-sm-size: 42px;
+  --fd-type-display-sm-line: 46px;
+  --fd-type-display-sm-weight: 700;
+  --fd-type-display-sm-tracking: -0.04em;
+  --fd-type-h2-size: 32px;
+  --fd-type-h2-line: 38px;
+  --fd-type-h2-weight: 600;
+  --fd-type-h3-size: 24px;
+  --fd-type-h3-line: 30px;
+  --fd-type-h3-weight: 600;
+  --fd-type-body-lg-size: 20px;
+  --fd-type-body-lg-line: 32px;
+  --fd-type-body-lg-weight: 400;
+  --fd-type-body-size: 17px;
+  --fd-type-body-line: 28px;
+  --fd-type-body-weight: 400;
+  --fd-type-small-size: 14px;
+  --fd-type-small-line: 22px;
+  --fd-type-small-weight: 400;
+  --fd-type-eyebrow-size: 12px;
+  --fd-type-eyebrow-line: 16px;
+  --fd-type-eyebrow-weight: 700;
+  --fd-type-eyebrow-tracking: 0.22em;
+  --fd-font-family: "Plus Jakarta Sans", "Avenir Next", Avenir, Inter, Arial, sans-serif;
+  --fd-container-max: 1280px;
+  --fd-gutter-page: clamp(24px, 5vw, 80px);
+  --fd-target-min: 44px;
+  --fd-elevation-raised: 0 4px 16px rgba(11,39,64,0.08);
+  --fd-elevation-overlay: 0 12px 32px rgba(11,39,64,0.16);
+  --fd-gradient-path: linear-gradient(90deg, #0070F3 0%, #057ED9 19.6%, #14A399 63%, #22C55E 100%);
+  --fd-gradient-path-artwork: linear-gradient(90deg, #0070F3 37%, #057ED9 46%, #14A399 66%, #22C55E 83%);
+  --fd-font-text: Inter, "Plus Jakarta Sans", system-ui, sans-serif;
+  --fd-font-code: "JetBrains Mono", Consolas, monospace;
+  --fd-header-height: 84px;
+  --fd-header-height-condensed: 67px;
+  --fd-header-height-mobile: 72px;
+  --fd-header-height-mobile-condensed: 58px;
+  --fd-header-logo-height: 52px;
+  --fd-header-logo-height-condensed: 42px;
+  --fd-header-transition: 350ms cubic-bezier(.2,.7,.2,1);
+}
+
+/* Focus. The offset is load-bearing: ai-blue against indigo-500 is 1.01:1, so the ring must
+   never touch a fill. With the offset it measures against the surface at 4.55:1 on white
+   and 3.35:1 on midnight. */
+:focus-visible {
+  outline: 2px solid var(--fd-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --fd-motion-micro: 0ms; --fd-motion-base: 0ms; --fd-motion-entrance: 0ms; --fd-motion-overlay: 0ms; }
+}

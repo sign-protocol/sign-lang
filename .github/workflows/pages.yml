@@ -1,0 +1,40 @@
+name: Deploy site to GitHub Pages
+
+# Publishes the site/ folder to https://sign-protocol.github.io/sign-lang/
+# Runs only when the site changes on main. It does not touch the spec, examples or validator.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stage the site
+        run: |
+          mkdir _site
+          cp -r site/index.html site/404.html site/assets site/engineers site/teams _site/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

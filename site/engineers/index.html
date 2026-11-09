@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIGN for engineers: from first file to a working agent</title>
+  <meta name="description" content="Six steps from cloning the SIGN specification to an agent that loads a SIGN index and fetches documents on demand.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/PlusJakartaSans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/Inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/five-deep.css">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site">
+  <div class="shell navbar">
+    <a class="sitename" href="../" aria-label="SIGN home"><strong>SIGN</strong><span>Sigil Intelligence Graph Notation</span></a>
+    <nav class="primary" aria-label="Main">
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
+      <ul id="nav-list">
+        <li><a href="./" aria-current="page">For engineers</a></li>
+        <li><a href="../teams/">For teams</a></li>
+        <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/spec/sign-v1.0.md">Specification</a></li>
+        <li><a class="btn btn-primary btn-sm" href="https://github.com/sign-protocol">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero compact" data-ground="dark" aria-labelledby="hero-title">
+    <div class="shell">
+      <span class="eyebrow">For engineers · about 30 minutes</span>
+      <h1 id="hero-title" class="display-md">From your first SIGN file to an agent that uses it.</h1>
+      <p class="lede">Six steps. You will validate the official examples, write and compile two documents of your own, and wire the result into an agent. You need Git and Node.js 18 or later. Every command below was run against the current specification.</p>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="shell steps-layout">
+
+      <nav class="step-nav" aria-label="Steps">
+        <ol>
+          <li><a href="#clone"><span class="n">1</span> Clone and validate</a></li>
+          <li><a href="#read"><span class="n">2</span> Read one document</a></li>
+          <li><a href="#write"><span class="n">3</span> Write your own</a></li>
+          <li><a href="#compile"><span class="n">4</span> Compile the canon</a></li>
+          <li><a href="#agent"><span class="n">5</span> Connect an agent</a></li>
+          <li><a href="#further"><span class="n">6</span> Go further</a></li>
+        </ol>
+      </nav>
+
+      <ol class="steps">
+
+        <li id="clone">
+          <span class="step-label">Step 1 of 6</span>
+          <h2>Clone the specification and validate the examples.</h2>
+          <p>The <code>sign-lang</code> repository holds the specification, six worked examples and the validator. The validator has no dependencies, so there is nothing to install.</p>
+          <div class="codehead"><span class="small muted">Terminal</span><button class="copy" type="button">Copy commands</button></div>
+<pre><code>git clone https://github.com/sign-protocol/sign-lang.git
+cd sign-lang
+node validator/bin/sign.js validate --source examples</code></pre>
+          <p class="mt-16">The last line of the output should read:</p>
+<pre><code>pass — 11 documents across 6 file(s)</code></pre>
+          <div class="note"><strong>Expect warnings.</strong><span>The examples link to documents that are not in the folder, so the validator prints <code>warn</code> lines before it passes. Warnings do not fail a build. Errors do.</span></div>
+          <p class="mt-16">To type <code>sign</code> instead of <code>node validator/bin/sign.js</code>, run <code>npm link</code> inside the <code>validator</code> folder. The rest of this guide uses the full path so it works either way.</p>
+          <label class="check"><input type="checkbox" data-step="clone"> I saw the pass line</label>
+        </li>
+
+        <li id="read">
+          <span class="step-label">Step 2 of 6</span>
+          <h2>Read one document before you write one.</h2>
+          <p>Open <code>examples/02-full-document.sign</code>. Each block starts with a sigil: a symbol that tells the agent what kind of content follows. These are the first lines:</p>
+<pre><code>@doc WFI-008 [std, active, agents+employees] v2 sha:7d4a1f
+@links WFI-001,WFI-002,WFI-003,WFI-009
+@cycle 90d
+@reviewed 2026-04-14
+
+@vocab
+  depends_on    | skill cannot be effectively applied without target present
+  adjacent_to   | skills frequently co-occur and complement; symmetric
+
+@def skill
+  Atomic, distinct, demonstrable capability enabling effective task performance.</code></pre>
+          <ul>
+            <li><code>@doc</code> gives the ID, the document type, the status, who it is for, and the version.</li>
+            <li><code>@links</code> names related documents. The validator checks that each one exists.</li>
+            <li><code>@cycle</code> and <code>@reviewed</code> say how often the document is reviewed and when it last was.</li>
+            <li><code>@vocab</code> defines every relationship word the document uses.</li>
+            <li><code>@def</code> holds a definition.</li>
+          </ul>
+          <p class="mt-16">Keep the <a href="https://github.com/sign-protocol/sign-lang/blob/main/spec/sigil-reference.md">sigil quick reference</a> open while you write. Block order matters: the validator fails a document whose blocks are out of order.</p>
+          <label class="check"><input type="checkbox" data-step="read"> I read the example</label>
+        </li>
+
+        <li id="write">
+          <span class="step-label">Step 3 of 6</span>
+          <h2>Write two documents that link to each other.</h2>
+          <p>Make a folder called <code>knowledge</code> next to <code>sign-lang</code> and add these two files. They describe a refund rule and the role it depends on. The <code>##</code> line is the one-sentence summary that goes into the index.</p>
+          <div class="codehead"><span class="small muted">knowledge/REFUND-001.sign</span><button class="copy" type="button">Copy file</button></div>
+<pre><code>@doc REFUND-001 [std, active, agents+employees] v1
+@links REFUND-002
+@cycle 90d
+@reviewed 2026-11-09
+## Refunds over 500 dollars need a manager's approval before an agent issues them.
+
+@vocab
+  approved_by | the refund is approved by the named role before it is issued
+
+@def refund
+  Money returned to a customer against a paid invoice.
+
+@rules
+  1. An agent may issue a refund of 500 dollars or less without approval.
+  2. A refund over 500 dollars needs approval from a support manager first.
+
+@constraints
+  manager-approval
+    requires: support-manager approval on any refund over 500 dollars
+    forbids: an agent issuing a refund over 500 dollars without that approval</code></pre>
+          <div class="codehead"><span class="small muted">knowledge/REFUND-002.sign</span><button class="copy" type="button">Copy file</button></div>
+<pre><code>@doc REFUND-002 [ref, active, agents] v1
+@links REFUND-001
+@cycle 180d
+@reviewed 2026-11-09
+## Who counts as a support manager for refund approvals.
+
+@def support-manager
+  A person in the Support Managers group in the HR system.</code></pre>
+          <div class="codehead"><span class="small muted">Terminal, from the folder that holds both</span><button class="copy" type="button">Copy command</button></div>
+<pre><code>node sign-lang/validator/bin/sign.js validate --source knowledge</code></pre>
+          <p class="mt-16">You should see <code>pass — 2 documents across 2 file(s)</code>. Now change <code>@links REFUND-002</code> to <code>REFUND-003</code> and validate again: the validator reports that no document with that ID exists. Change it back before you continue.</p>
+          <label class="check"><input type="checkbox" data-step="write"> Both documents pass</label>
+        </li>
+
+        <li id="compile">
+          <span class="step-label">Step 4 of 6</span>
+          <h2>Compile the canon into an index and a bundle.</h2>
+          <p>Compiling validates first, then writes the two layers an agent consumes.</p>
+          <div class="codehead"><span class="small muted">Terminal</span><button class="copy" type="button">Copy command</button></div>
+<pre><code>node sign-lang/validator/bin/sign.js compile --source knowledge --output dist</code></pre>
+          <ul>
+            <li><code>dist/canon-index.sign</code> is Layer 1: one entry per document with its ID, links and summary. The sample index is about 68 tokens.</li>
+            <li><code>dist/canon-bundle.sign</code> is Layer 2: the full text of every active document.</li>
+            <li><code>dist/canon-manifest.json</code> records the version, document count, build time and a SHA-256 hash, and <code>canon-bundle.sign.sha256</code> lets you check the bundle has not changed.</li>
+          </ul>
+          <div class="note"><strong>Compile is stricter.</strong><span>A link to a missing document is a warning during <code>validate</code> on the examples but an error during <code>compile</code>. Every document you link to must be in the source folder.</span></div>
+          <label class="check"><input type="checkbox" data-step="compile"> I have a dist folder</label>
+        </li>
+
+        <li id="agent">
+          <span class="step-label">Step 5 of 6</span>
+          <h2>Load the index into the prompt and serve documents through a tool.</h2>
+          <p>The agent always sees the index, so it knows which documents exist and what each one covers. It calls a tool to fetch the full text only when a task needs it. This file works with any model or agent framework that supports tools; register <code>get_canon_doc</code> in whatever format yours uses.</p>
+          <div class="codehead"><span class="small muted">agent.mjs</span><button class="copy" type="button">Copy file</button></div>
+<pre><code>import { readFileSync } from "node:fs";
+
+const index = readFileSync("dist/canon-index.sign", "utf8");
+const bundle = readFileSync("dist/canon-bundle.sign", "utf8");
+
+<span class="c">// Split the Layer 2 bundle into documents, keyed by ID.</span>
+const docs = new Map();
+for (const chunk of bundle.split(/^# --- .+ ---$/m)) {
+  const id = chunk.match(/^@doc (\S+)/m)?.[1];
+  if (id) docs.set(id, chunk.trim());
+}
+
+<span class="c">// Layer 1 goes into every system prompt.</span>
+export const systemPrompt = `You work under the following knowledge canon:
+${index}
+Call get_canon_doc with a document ID when you need its full rules.`;
+
+<span class="c">// Layer 2 is served on demand through a tool.</span>
+export function get_canon_doc({ id }) {
+  return docs.get(id) ?? `No active document with ID ${id}.`;
+}</code></pre>
+          <p class="mt-16">Ask the agent to issue a 700 dollar refund. It should see REFUND-001 in the index, fetch it, and ask for a support manager's approval.</p>
+          <div class="note"><strong>Measure the difference.</strong><span>Before you switch a real agent over, run a few of its usual tasks with your current prompts and record the tokens each call uses. Run the same tasks with the SIGN index and compare. The validator prints the index size on every run, for example <code>index budget: ~68 / 400 tokens</code>.</span></div>
+          <label class="check"><input type="checkbox" data-step="agent"> My agent fetched a document</label>
+        </li>
+
+        <li id="further">
+          <span class="step-label">Step 6 of 6</span>
+          <h2>Go further with the reference tools.</h2>
+          <p>The <a href="https://github.com/sign-protocol/sign-tools">sign-tools</a> repository holds reference implementations at version 0.1.</p>
+          <div class="table-wrap mt-24">
+            <table>
+              <thead><tr><th scope="col">You have</th><th scope="col">Use</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Finished policies, standards, ADRs or glossaries</th><td><a href="https://github.com/sign-protocol/sign-tools/tree/main/packages/sign-ingest">sign-ingest</a>, a command-line tool that converts each document to SIGN with provenance and an optional review step.</td></tr>
+                <tr><th scope="row">Notes or requirements, but no finished document</th><td><a href="https://github.com/sign-protocol/sign-tools/tree/main/packages/sign-draft">sign-draft</a>, a Claude Code skill that drafts a new SIGN document and runs the validator on it.</td></tr>
+                <tr><th scope="row">A code repository</th><td><a href="https://github.com/sign-protocol/sign-tools/tree/main/packages/sign-encode-repo">sign-encode-repo</a>, a Claude Code skill that writes four documents describing the repository: overview, architecture, dependencies and standards. It does not edit source code or send repository content over the network.</td></tr>
+                <tr><th scope="row">VS Code</th><td>The <a href="https://github.com/sign-protocol/sign-lang/tree/main/editor-support/vscode">SIGN language extension</a> adds syntax highlighting for <code>.sign</code> files.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-24">Run sign-encode-repo on a small or sample repository first, so you can check its output before it touches your main codebase. If your security team needs to approve the tools, the <a href="../teams/#security-title">team guide has a note you can send them</a>.</p>
+          <p class="mt-16">To propose a new sigil or report a problem in the specification, <a href="https://github.com/sign-protocol/sign-lang/issues">open an issue on sign-lang</a> before you write code. The <a href="https://github.com/sign-protocol/sign-lang/blob/main/CONTRIBUTING.md">contributing guide</a> explains how proposals are reviewed.</p>
+          <label class="check"><input type="checkbox" data-step="further"> I picked my next tool</label>
+        </li>
+
+      </ol>
+    </div>
+  </section>
+
+  <section class="paper tight" aria-labelledby="close-title">
+    <div class="shell">
+      <span class="eyebrow">Explaining SIGN to your team</span>
+      <h2 id="close-title">Send them the team guide.</h2>
+      <p class="lede">It covers what SIGN changes, how to adopt it on one body of knowledge, and what stays under your company's control, without the code.</p>
+      <div class="actions">
+        <a class="btn btn-primary btn-lg" href="../teams/">Open the team guide</a>
+        <a class="btn btn-secondary btn-lg" href="https://github.com/sign-protocol/sign-lang/blob/main/spec/sign-v1.0.md">Read the full specification</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site" data-ground="dark">
+  <div class="shell">
+    <div class="foot-grid">
+      <div>
+        <img class="footmark" src="../assets/img/logo-fivedeep-hor-neg.svg" alt="Five Deep" width="192" height="40">
+        <p>SIGN is an open specification maintained by Five Deep. The specification and tools are licensed under Apache 2.0.</p>
+      </div>
+      <div>
+        <h2>Start</h2>
+        <ul>
+          <li><a href="./">For engineers</a></li>
+          <li><a href="../teams/">For teams</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Project</h2>
+        <ul>
+          <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/spec/sign-v1.0.md">Specification</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-lang">sign-lang</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-tools">sign-tools</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Community</h2>
+        <ul>
+          <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/CONTRIBUTING.md">Contributing</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-lang/issues">Issues</a></li>
+          <li><a href="https://charter.fivedeep.ai">Test Drive Charter</a></li>
+          <li><a href="https://fivedeep.ai">Five Deep</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="legal">© 2026 Career Highways, Inc. dba Five Deep. SIGN is released under the Apache License 2.0.</p>
+  </div>
+</footer>
+
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
