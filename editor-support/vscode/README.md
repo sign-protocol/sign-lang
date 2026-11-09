@@ -1,15 +1,14 @@
 # SIGN Language Support for VS Code
 
-**Authored and maintained by Career Highways | Dr. Joe Shepherd.**
+**Authored by Dr. Joe Shepherd. Maintained by Five Deep.** Getting started: https://sign-protocol.github.io/sign-lang/
 
 Syntax highlighting and file icons for **SIGN** (Sigil Intelligence Graph Notation) `.sign` files.
 
 **SIGN** is an open notation for **governed knowledge** — canonical definitions, numbered rules, constraints, relationships, clusters, and inference — expressed in a form AI agents can read and reason over at runtime. The notation is domain-agnostic: any rule-dense, audit-critical knowledge domain (workforce intelligence, healthcare compliance, brand and marketing governance, financial services risk policy) can be expressed in it.
 
-The format is open (Apache-2.0). The authoritative corpus is governed by Career Highways.
+The format is open (Apache-2.0). SIGN originated at Career Highways and is maintained by Five Deep.
 
 > Spec: `sign-lang/spec/sign-v1.0.md` and `sign-lang/spec/sigil-reference.md`  
-> Canon reference: SIGN-001 in `career-highways-canon/sign/SIGN-001.sign`
 
 ## Token color map
 
@@ -44,14 +43,14 @@ The format is open (Apache-2.0). The authoritative corpus is governed by Career 
 macOS / Linux:
 
 ```bash
-cp -r sign-lang/editor-support/vscode ~/.vscode/extensions/career-highways.sign-language-1.1.0
+cp -r sign-lang/editor-support/vscode ~/.vscode/extensions/five-deep.sign-language-1.2.4
 ```
 
 Windows (PowerShell):
 
 ```powershell
-Copy-Item -Recurse -Force C:\CareerHighways\sign-lang\editor-support\vscode `
-  "$env:USERPROFILE\.vscode\extensions\career-highways.sign-language-1.1.0"
+Copy-Item -Recurse -Force .\sign-lang\editor-support\vscode `
+  "$env:USERPROFILE\.vscode\extensions\five-deep.sign-language-1.2.4"
 ```
 
 Then reload VS Code: `Ctrl+Shift+P` → `Developer: Reload Window`.
@@ -64,10 +63,10 @@ cd sign-lang/editor-support/vscode
 vsce package
 ```
 
-`vsce package` produces `sign-language-1.1.0.vsix` in the current directory. Install it:
+`vsce package` produces `sign-language-1.2.4.vsix` in the current directory. Install it:
 
 ```bash
-code --install-extension sign-language-1.1.0.vsix
+code --install-extension sign-language-1.2.4.vsix
 ```
 
 ## Scope reference
