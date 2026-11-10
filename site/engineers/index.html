@@ -16,7 +16,11 @@
 
 <header class="site">
   <div class="shell navbar">
-    <a class="sitename" href="../" aria-label="SIGN home"><strong>SIGN</strong><span>Sigil Intelligence Graph Notation</span></a>
+    <div class="brand">
+      <a class="brandlink" href="https://www.fivedeep.ai"><img class="brandmark" src="../assets/img/logo-fivedeep-hor-pos.svg" alt="Five Deep" width="250" height="52"></a>
+      <span class="brand-divider" aria-hidden="true"></span>
+      <a class="sitename" href="../" aria-label="SIGN home"><strong>SIGN</strong><span>Sigil Intelligence Graph Notation</span></a>
+    </div>
     <nav class="primary" aria-label="Main">
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="nav-list">Menu</button>
       <ul id="nav-list">
@@ -222,11 +226,11 @@ export function get_canon_doc({ id }) {
 
 <footer class="site" data-ground="dark">
   <div class="shell">
+    <div class="foot-brand">
+      <img class="footmark" src="../assets/img/logo-fivedeep-hor-neg.svg" alt="Five Deep" width="250" height="52">
+      <p>SIGN is an open specification maintained by Five Deep. The specification and tools are licensed under Apache 2.0.</p>
+    </div>
     <div class="foot-grid">
-      <div>
-        <img class="footmark" src="../assets/img/logo-fivedeep-hor-neg.svg" alt="Five Deep" width="192" height="40">
-        <p>SIGN is an open specification maintained by Five Deep. The specification and tools are licensed under Apache 2.0.</p>
-      </div>
       <div>
         <h2>Start</h2>
         <ul>
@@ -247,8 +251,15 @@ export function get_canon_doc({ id }) {
         <ul>
           <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/CONTRIBUTING.md">Contributing</a></li>
           <li><a href="https://github.com/sign-protocol/sign-lang/issues">Issues</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a></li>
+          <li><a href="https://github.com/sign-protocol/sign-lang/blob/main/SECURITY.md">Security</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Five Deep</h2>
+        <ul>
+          <li><a href="https://www.fivedeep.ai">About Five Deep</a></li>
           <li><a href="https://charter.fivedeep.ai">Test Drive Charter</a></li>
-          <li><a href="https://fivedeep.ai">Five Deep</a></li>
         </ul>
       </div>
     </div>
