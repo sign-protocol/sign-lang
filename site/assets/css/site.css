@@ -232,7 +232,9 @@ nav.primary a[aria-current='page'] { text-decoration: underline; text-decoration
 a.card {
   display: flex; flex-direction: column; gap: var(--fd-space-12);
   text-decoration: none; color: var(--fd-text-body);
-  border-color: var(--fd-border-interactive);
+  /* Line color by design decision (2026-11-10), matching the static cards. This is below the
+     3:1 interactive-boundary rule in TEN-CH-DESIGN-040 CARD; the hover state uses the strong border. */
+  border-color: var(--fd-border-decorative);
   transition: box-shadow var(--fd-motion-micro) var(--fd-easing-in), border-color var(--fd-motion-micro) var(--fd-easing-in);
 }
 a.card:hover { box-shadow: var(--fd-elevation-raised); border-color: var(--fd-border-strong); }
