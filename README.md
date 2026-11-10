@@ -6,6 +6,8 @@ JSON serializes data for machines. SIGN declares knowledge for agents.
 
 [![DOI](https://img.shields.io/badge/DOI-10.17605%2FOSF.IO%2F6YZJ7-blue)](https://doi.org/10.17605/OSF.IO/6YZJ7)
 
+**New to SIGN? Start at [sign-protocol.github.io/sign-lang](https://sign-protocol.github.io/sign-lang/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=site-link-top)**: a guide for engineers (first file to a working agent in about 30 minutes) and one for teams.
+
 ---
 
 ## The Gap SIGN Fills
@@ -56,8 +58,6 @@ The token comparison is real and measurable.
 | Full knowledge document | 379 tokens | 978 tokens | 61% |
 | 9-document index | 406 tokens | 818 tokens | 50% |
 
-At 1000 agent invocations per day, that is roughly 400,000 tokens saved daily on index injection alone — before counting document retrievals.
-
 ---
 
 ## Two-Layer Delivery
@@ -73,52 +73,56 @@ SIGN delivers canon in two layers with different injection strategies.
 
 ## Quick Start
 
-### 1 — Author in Markdown
+You need Git and Node.js 18 or later. The validator has no dependencies, so there is nothing to install.
 
-```yaml
----
-id: KNOW-001
-title: My Knowledge Standard
-doc_type: std
-status: active
-audiences: [agents]
-related_docs: [KNOW-002]
-agent_summary: >
-  One-sentence agent-consumable summary of what this document governs.
----
-```
-
-### 2 — Compile
+### 1 — Clone and validate the examples
 
 ```bash
-sign compile --source ./knowledge --output ./dist
-# Produces:
-# dist/canon-index.sign       Layer 1: always-injected index
-# dist/canon-bundle.sign      Layer 2: full documents on demand
-# dist/canon-manifest.json    Version, sha, doc count, timestamp
+git clone https://github.com/sign-protocol/sign-lang.git
+cd sign-lang
+node validator/bin/sign.js validate --source examples
 ```
 
-### 3 — Inject the Index
+The last line should read `pass — 11 documents across 6 file(s)`. The `warn` lines before it are expected: the examples link to documents that are not in the folder.
+
+### 2 — Write your own documents and compile them
+
+Put your `.sign` files in a folder, for example `knowledge/`, then:
+
+```bash
+node sign-lang/validator/bin/sign.js validate --source knowledge
+node sign-lang/validator/bin/sign.js compile --source knowledge --output dist
+```
+
+`compile` writes `dist/canon-index.sign` (Layer 1), `dist/canon-bundle.sign` (Layer 2), `dist/canon-manifest.json` and a SHA-256 checksum. Every document you link to must be in the source folder.
+
+### 3 — Give the index to an agent and serve documents by ID
 
 ```js
-const index = fs.readFileSync("dist/canon-index.sign", "utf8");
-const systemPrompt = `
-You operate under the following knowledge canon:
+import { readFileSync } from "node:fs";
+
+const index = readFileSync("dist/canon-index.sign", "utf8");
+const bundle = readFileSync("dist/canon-bundle.sign", "utf8");
+
+// Split the Layer 2 bundle into documents, keyed by ID.
+const docs = new Map();
+for (const chunk of bundle.split(/^# --- .+ ---$/m)) {
+  const id = chunk.match(/^@doc (\S+)/m)?.[1];
+  if (id) docs.set(id, chunk.trim());
+}
+
+// Layer 1 goes into every system prompt.
+export const systemPrompt = `You work under the following knowledge canon:
 ${index}
-Call get_canon_doc(id) when you need full rule text for a document.
-`;
+Call get_canon_doc with a document ID when you need its full rules.`;
+
+// Layer 2 is served on demand through a tool.
+export function get_canon_doc({ id }) {
+  return docs.get(id) ?? `No active document with ID ${id}.`;
+}
 ```
 
-### 4 — Wire Document Retrieval
-
-```js
-tools: [{
-  name: "get_canon_doc",
-  description: "Retrieve full SIGN document by ID",
-  parameters: { id: { type: "string" } },
-  handler: async ({ id }) => canonBundle.getDoc(id)
-}]
-```
+The [engineer guide](https://sign-protocol.github.io/sign-lang/engineers/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=quick-start-guide) walks through each step with two sample documents and what you should see.
 
 ---
 
@@ -135,9 +139,17 @@ tools: [{
 
 **v1.0 — April 2026**
 
-Originated at [Career Highways](https://careerhighways.com). Open source under the Apache License 2.0.
+Originated at [Career Highways, Inc., dba Five Deep](https://fivedeep.ai/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=status-line). Open source under the Apache License 2.0.
 
 SIGN is production-validated against a 9-document ontology corpus serving multiple agent workflows.
+
+---
+
+## SIGN in Charter
+
+Charter, from Five Deep, delivers a company's knowledge and rules to its agents in SIGN. Charter requires the area owner's approval. A document the owner adds is approved as it's added. Anyone else's waits for the owner.
+
+[Test Drive Charter](https://charter.fivedeep.ai/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=test-drive), free for 30 days.
 
 ---
 

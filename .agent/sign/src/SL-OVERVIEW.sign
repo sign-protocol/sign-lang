@@ -3,6 +3,7 @@
 
 @doc SL-OVERVIEW [ref, active, agents+employees] v1 sha:pending
 @links SL-ARCH,SL-DEPS,SL-STANDARDS
+## What the sign-lang repository holds: the SIGN v1.0 specification, worked examples, decisions and the reference validator and compiler.
 
 @anchor [repo:sign-lang, vcs:git]
   + spec/**

@@ -3,6 +3,7 @@
 
 @doc SL-STANDARDS [std, active, agents+employees] v1 sha:pending
 @links SL-OVERVIEW,SL-ARCH
+## Coding and authoring rules for this repository: zero npm dependencies, CommonJS, built-in test runner and spec-cited validation rules.
 
 @rules
   1. Zero dependencies: the validator package must not add npm dependencies; use only
@@ -27,16 +28,6 @@
   12. Reserved namespace: extensions (@pathway, @signal, @benchmark, min:/max:) are
       tracked under @reserved in the spec; do not implement until formally specified
 
-@disallowed
-  ! external npm dependencies in the validator package
-  ! ES module syntax (import/export) in validator source files
-  ! AST construction in the current parser phase (deferred to phase 4)
-  ! inline validation in the parser — validation lives in rules.js only
-  ! publishing @reserved sigils without a spec amendment and issue approval
-  ! compact @anchor form in authored full documents (Layer-1 emission only)
-  ! symmetric predicates (<=> in @rel) without bidirectional @edges verification
-  ! test frameworks other than Node.js built-in test runner
-
 @constraints
   sign-standards
   requires: every new validation rule cites its spec section
@@ -46,3 +37,13 @@
   forbids: skipping the vocab-completeness check for outbound predicates
   forbids: merging a new sigil without a spec/sigil-reference.md update
   enforced-by: CI validation (sign validate), code review, ADR process
+
+@disallowed
+  ! external npm dependencies in the validator package
+  ! ES module syntax (import/export) in validator source files
+  ! AST construction in the current parser phase (deferred to phase 4)
+  ! inline validation in the parser — validation lives in rules.js only
+  ! publishing @reserved sigils without a spec amendment and issue approval
+  ! compact @anchor form in authored full documents (Layer-1 emission only)
+  ! symmetric predicates (<=> in @rel) without bidirectional @edges verification
+  ! test frameworks other than Node.js built-in test runner

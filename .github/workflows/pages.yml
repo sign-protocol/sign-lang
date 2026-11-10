@@ -30,7 +30,7 @@ jobs:
       - name: Stage the site
         run: |
           mkdir _site
-          cp -r site/index.html site/404.html site/assets site/engineers site/teams _site/
+          cp -r site/index.html site/404.html site/sitemap.xml site/assets site/engineers site/teams _site/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
