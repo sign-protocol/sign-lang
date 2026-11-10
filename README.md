@@ -1,12 +1,27 @@
 # SIGN — Sigil Intelligence Graph Notation
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/sign-readme-hero-dark.png">
+  <img src="docs/img/sign-readme-hero-light.png" width="100%" alt="How SIGN delivers knowledge to an agent. Your SIGN files compile into two layers. Layer 1, the index, holds the ID, status, links and a one-line summary of each document, about 400 tokens, and goes into every system prompt. Layer 2, the bundle, holds the full text of each active document; the agent fetches one by ID with get_canon_doc only when a task needs it.">
+</picture>
+
+### SIGN is open and free. Charter runs it for your company.
+
+| | SIGN, open source | Charter, from Five Deep |
+|---|---|---|
+| **What it is** | A file format and open tools, under the Apache License 2.0 | The AI Authority: it delivers your company's knowledge and rules to your agents in SIGN |
+| **Writing knowledge** | You write and validate SIGN files. sign-ingest and the Claude Code skills draft them for you to review | Your knowledge lives in Canon, and each area has an owner |
+| **Approval** | You set your own review. Everything the tools generate is a draft | Charter requires the area owner's approval. A document the owner adds is approved as it's added. Anyone else's waits for the owner |
+| **Getting it to agents** | You compile the index and bundle and wire up `get_canon_doc` yourself | Your agents receive it through MCP |
+| **Cost** | Free | Test Drive Charter free for 30 days |
+
+**Start here:** [run the validator on the examples](https://sign-protocol.github.io/sign-lang/engineers/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=readme-start), about five minutes. Then [Test Drive Charter](https://charter.fivedeep.ai/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=readme-test-drive).
+
 **Strongly typed · Human readable · Token optimized · For the agentic consumer**
 
 JSON serializes data for machines. SIGN declares knowledge for agents.
 
 [![DOI](https://img.shields.io/badge/DOI-10.17605%2FOSF.IO%2F6YZJ7-blue)](https://doi.org/10.17605/OSF.IO/6YZJ7)
-
-**New to SIGN? Start at [sign-protocol.github.io/sign-lang](https://sign-protocol.github.io/sign-lang/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=site-link-top)**: a guide for engineers (first file to a working agent in about 30 minutes) and one for teams.
 
 ---
 
