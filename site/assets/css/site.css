@@ -108,7 +108,7 @@ a:hover { text-decoration-thickness: 2px; }
 
 code, pre, kbd { font-family: var(--fd-font-code); }
 :not(pre) > code {
-  font-size: 0.9em;
+  font-size: var(--fd-type-small-size);
   background: var(--fd-surface-raised);
   border: 1px solid var(--fd-border-decorative);
   border-radius: var(--fd-radius-sm);
