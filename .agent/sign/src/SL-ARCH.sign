@@ -3,6 +3,7 @@
 
 @doc SL-ARCH [std, active, agents+employees] v1 sha:pending
 @links SL-OVERVIEW,SL-DEPS,SL-STANDARDS
+## How the validator and compiler are built: regex parser, rules engine, compiler and the coverage, drift and diff commands.
 
 @anchor [repo:sign-lang, vcs:git]
   + validator/src/**

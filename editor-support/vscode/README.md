@@ -1,6 +1,6 @@
 # SIGN Language Support for VS Code
 
-**Authored by Dr. Joe Shepherd. Maintained by Five Deep.** Getting started: https://sign-protocol.github.io/sign-lang/
+**Authored by Dr. Joe Shepherd. Maintained by Five Deep.** Getting started: [sign-protocol.github.io/sign-lang](https://sign-protocol.github.io/sign-lang/?utm_source=vscode-extension-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=getting-started)
 
 Syntax highlighting and file icons for **SIGN** (Sigil Intelligence Graph Notation) `.sign` files.
 

@@ -3,9 +3,16 @@
 
 @doc SL-DEPS [ref, active, agents+employees] v1 sha:pending
 @links SL-OVERVIEW,SL-ARCH
+## What the validator depends on: Node.js built-ins only, git at runtime, and sign-ingest discovered for the import command.
 
 @anchor [repo:sign-lang, vcs:git]
   + validator/package.json
+
+@vocab
+  parses     | the validator reads .sign text into structured document objects
+  compiles   | the validator turns validated source into the Layer 1 index and Layer 2 bundle
+  delegates  | the validator hands a command to another tool it finds at runtime
+  highlights | the editor support colors SIGN syntax in an editor
 
 @props external
   + node-fs               | file system operations: directory walk, file read/write (Node.js built-in)
