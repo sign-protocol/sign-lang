@@ -29,7 +29,7 @@ JSON serializes data for machines. SIGN declares knowledge for agents.
 
 Every team building production agent systems eventually hits the same wall. How do you give agents access to your domain knowledge, business rules, and governance constraints — at scale, with governance, without burning your token budget — in a form agents can actually reason over rather than just retrieve?
 
-Three partial answers exist today. None of them are complete.
+Four partial answers exist today. None of them are complete.
 
 | Existing approach | Why it falls short |
 |---|---|
@@ -164,7 +164,7 @@ SIGN is production-validated against a 9-document ontology corpus serving multip
 
 Charter, from Five Deep, delivers a company's knowledge and rules to its agents in SIGN. Charter requires the area owner's approval. A document the owner adds is approved as it's added. Anyone else's waits for the owner.
 
-[Test Drive Charter](https://charter.fivedeep.ai/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=test-drive), free for 30 days.
+[Test Drive Charter](https://charter.fivedeep.ai/?utm_source=github-sign-lang-readme&utm_medium=referral&utm_campaign=sign-open-source&utm_content=test-drive), free for 30 days. Sign-up asks for your phone number and billing address. No credit card required.
 
 ---
 
