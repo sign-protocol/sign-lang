@@ -150,3 +150,46 @@ test('detects missing infer fields in fixture', () => {
   assert.ok(!infer.confidence, 'confidence: missing');
   assert.ok(!infer.src,        'src: missing');
 });
+
+// ─── v1.1 header fields: @title, @summary, @abstract ─────────────────────────
+
+const V11_HEADER = [
+  '@doc WFI-200 [std, active, agents] v3',
+  '@title Skill Definition Standard',
+  '@summary How a skill is defined.',
+  '@abstract Defines a skill as an atomic, demonstrable capability.',
+  '@links WFI-001',
+  '@cycle 90d',
+  '@def skill',
+  '  An atomic, demonstrable capability.',
+  '',
+].join('\n');
+
+test('reads @title, @summary and @abstract header lines', () => {
+  const { documents, parseErrors } = parseFile('t.sign', V11_HEADER);
+  assert.deepEqual(parseErrors, []);
+  const [doc] = documents;
+  assert.equal(doc.title, 'Skill Definition Standard');
+  assert.equal(doc.summaryLine, 'How a skill is defined.');
+  assert.equal(doc.abstract, 'Defines a skill as an atomic, demonstrable capability.');
+  assert.deepEqual(doc.blockSequence.slice(0, 4).map(b => b.sigil), ['title', 'summary', 'abstract', 'links']);
+});
+
+test('still reads the older ## summary line in a full document', () => {
+  const { documents, parseErrors } = parseFile('t.sign', '@doc A-1 [std, active, agents] v1\n## Old summary.\n@def x\n  y\n');
+  assert.deepEqual(parseErrors, []);
+  assert.equal(documents[0].summaryLine, 'Old summary.');
+});
+
+test('a summary in both @summary and ## is a parse error', () => {
+  const content = V11_HEADER.replace('@links WFI-001', '## How a skill is defined.\n@links WFI-001');
+  const { parseErrors } = parseFile('t.sign', content);
+  assert.ok(parseErrors.some(e => e.includes('summary given twice')), parseErrors.join('; '));
+});
+
+test('a header field with no text, or given twice, is a parse error', () => {
+  const empty = parseFile('t.sign', V11_HEADER.replace('@title Skill Definition Standard', '@title'));
+  assert.ok(empty.parseErrors.some(e => e.includes('@title has no text')), empty.parseErrors.join('; '));
+  const twice = parseFile('t.sign', V11_HEADER.replace('@links', '@abstract Again.\n@links'));
+  assert.ok(twice.parseErrors.some(e => e.includes('abstract must be singular')), twice.parseErrors.join('; '));
+});

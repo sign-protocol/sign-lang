@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **v1.1 grammar: `@title`, `@summary` and `@abstract` header fields.** Three optional one-line
+  header fields, straight after `@doc` and before `@links`, so a reader meets a document's title,
+  summary and abstract before anything else. `@summary` replaces the full document's `##` line,
+  which stays valid for documents written before it; a document carries its summary in one place.
+  The Layer-1 index entry is unchanged and still carries the summary as its `##` line. Additive.
+  Spec §2.1, §4.2, §10.1, sigil reference and validator `BLOCK_ORDER` updated.
 - **v1.1 grammar: `::` group labels in list blocks**
   (`proposals/2026-08-list-block-group-labels.md`, accepted 2026-08-16). A line beginning
   `::` inside `@vocab`, `@attrs`, `@include`, or `@exclude` names the group of entries that

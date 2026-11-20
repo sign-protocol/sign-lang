@@ -162,7 +162,8 @@ function checkSymmetricEdges(allDocs) {
 // The Layer 1 index must not exceed ~400 tokens.
 // Approximation: chars / 4 (standard estimate for mixed English + identifiers).
 // Only active documents contribute to the index.
-// Each active @doc must have exactly one ## summary line.
+// Each active @doc must have exactly one summary: an @summary header line, or the older ## line.
+// The index entry always carries it as its ## line.
 const INDEX_TOKEN_BUDGET = 400;
 
 function checkIndexBudget(allDocs) {
@@ -177,7 +178,7 @@ function checkIndexBudget(allDocs) {
   for (const { doc } of activeDocs) {
     if (!doc.summaryLine) {
       warnings.push(
-        `${doc.id} — active document has no ## summary line; required when compiled into Layer 1 index`
+        `${doc.id} — active document has no summary (@summary header line or ## line); required when compiled into Layer 1 index`
       );
     }
     // Estimate chars for this doc's index entry:
