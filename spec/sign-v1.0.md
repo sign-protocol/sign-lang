@@ -27,7 +27,10 @@ This is the core design insight. LLM agents parse by pattern recognition and sem
 |---|---|---|
 | `@canon` | Bundle header | Version and SHA-256 hash of the compiled artifact |
 | `@doc` | Document declaration | Identity, type token, status, audience scope. May carry a provisional trailing landing-status flag after audiences (e.g. `machine-drafted`; lint, not grammar — see §7). |
-| `## Agent summary` | Compressed summary | One per `@doc` in the index layer — self-contained for retrieval decision-making |
+| `@title` | Title | The document's human-readable title, on one line straight after `@doc` (v1.1) |
+| `@summary` | Summary | One-sentence summary, on one line after `@title` (v1.1). The index entry carries it as its `##` line. |
+| `@abstract` | Abstract | A short plain-language account of what the document says, on one line after `@summary` (v1.1). Full documents only. |
+| `## Agent summary` | Compressed summary | One per `@doc` in the index layer — self-contained for retrieval decision-making. In a full document, the older form of `@summary`: a document carries its summary in one place, never both. |
 | `@links` | Related documents | Comma-separated related canon doc IDs. Optionally typed. |
 | `@anchor` | Source coverage binding | The Layer-0 source artifacts this document governs (repository globs, OKF concept paths, or system identifiers). The only content-binding sigil permitted in Layer 1. |
 | `@cycle` | Review cycle | Review cadence in days: `@cycle 60d` |
@@ -216,6 +219,9 @@ Block order is enforced by the build pipeline. Not all blocks are required for e
 
 ```
 @doc {ID} [{type}, {status}, {audiences}] v{n} sha:{hash}
+@title {title}
+@summary {summary}
+@abstract {abstract}
 @links {related_ids}
 @anchor [{key}:{value}, ...]
   # source artifacts this document governs (opaque patterns)
@@ -472,6 +478,11 @@ SIGN governs its own extension namespace through `@reserved`. This prevents inco
 
 - Lines beginning with `@` followed by a lowercase token are sigil declarations.
 - Lines beginning with `##` are agent summary lines. Valid only immediately inside `@doc` in the index layer.
+  A full document written before v1.1 may carry its summary this way instead of `@summary`; a document
+  that has both is a parse error (`summary given twice`).
+- `@title`, `@summary` and `@abstract` (v1.1) are one-line header fields: the sigil, a space, then the
+  text, all on one line, straight after `@doc` in that order. A field with no text is a parse error,
+  and a second `@title`, `@summary` or `@abstract` is a parse error (`<field> must be singular`).
 - Lines beginning with `+`, `?`, or `!` are list entries within their parent sigil block.
 - Lines containing `->` or `<-` are relationship declarations within `@rel` or `@edges`.
 - Lines containing `<=>` are symmetric relationship declarations.

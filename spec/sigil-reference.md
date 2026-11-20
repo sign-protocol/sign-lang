@@ -4,7 +4,10 @@
 |---|---|---|
 | `@canon` | Bundle | Version + SHA header |
 | `@doc` | Both | Document identity, type, status, audiences |
-| `## {summary}` | Index | Agent summary line — one per `@doc` |
+| `@title` | Full | Title — one line after `@doc` (v1.1) |
+| `@summary` | Full | Summary — one line after `@title`; the index carries it as `##` (v1.1) |
+| `@abstract` | Full | Abstract — one line after `@summary` (v1.1) |
+| `## {summary}` | Index | Agent summary line — one per `@doc` (older full documents may carry it instead of `@summary`, never both) |
 | `@links` | Both | Related document edges |
 | `@anchor` | Both | Source-artifact coverage binding — repository globs / OKF paths this document governs |
 | `@cycle` | Full | Review cadence |
@@ -44,7 +47,7 @@
 ## Block Order (enforced by build pipeline)
 
 ```
-@doc → @links → @anchor → @cycle → @reviewed → @vocab → @def → @props → @include → @exclude
+@doc → @title → @summary → @abstract → @links → @anchor → @cycle → @reviewed → @vocab → @def → @props → @include → @exclude
 → @rules → @boundary → @constraints → @cluster → @infer → @rel → @edges → @xwalk
 → @attrs (required) → @attrs (optional) → @disallowed → @phases → @status → @currency
 → @sources → @reserved

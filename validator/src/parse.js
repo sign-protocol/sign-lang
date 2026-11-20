@@ -1,14 +1,18 @@
 'use strict';
 
-// Canonical block order from spec §4.2 (currency/sources added in v1.1)
+// Canonical block order from spec §4.2 (currency/sources added in v1.1; the one-line
+// title/summary/abstract header fields in v1.1)
 const BLOCK_ORDER = [
-  'doc', 'links', 'anchor', 'cycle', 'reviewed', 'vocab', 'def', 'props',
+  'doc', 'title', 'summary', 'abstract', 'links', 'anchor', 'cycle', 'reviewed', 'vocab', 'def', 'props',
   'include', 'exclude', 'rules', 'boundary', 'constraints',
   'cluster', 'infer', 'rel', 'edges', 'xwalk',
   'attrs', 'disallowed', 'phases', 'status', 'currency', 'sources', 'reserved',
 ];
 
 const BLOCK_RANK = Object.fromEntries(BLOCK_ORDER.map((s, i) => [s, i]));
+
+// One-line header fields (§4.2): the marker, a space, then the text, straight after @doc.
+const HEADER_FIELDS = new Set(['title', 'summary', 'abstract']);
 
 // Namespaced ID pattern: word:anything or @cluster:anything
 const NS_ID_RE = /^[@\w][\w-]*:.+/;
@@ -126,7 +130,7 @@ function extractClusterRefs(lines) {
  *
  * ParsedDoc: {
  *   id, type, status, audiences, version, sha,
- *   lineNumber, summaryLine,
+ *   lineNumber, summaryLine, title, abstract,
  *   links: string[],
  *   blockSequence: { sigil, lineNumber }[],
  *   vocab: string[],
@@ -161,7 +165,10 @@ function parseFile(filePath, content) {
     return {
       id, type, status, audiences, version, sha,
       lineNumber,
-      summaryLine: null,
+      summaryLine: null,   // from @summary, or the older `## ` line
+      summaryFrom: null,   // 'summary' | '##' — where summaryLine was read from
+      title: null,
+      abstract: null,
       links: [],
       anchor: null,        // single AnchorNode: { source, include[], exclude[], compact, lineNumber }
       xwalkSources: [],    // source prefixes seen in @xwalk (e.g. "okf"), for ANCHOR005
@@ -218,7 +225,14 @@ function parseFile(filePath, content) {
 
     // Agent summary line (## inside index @doc) — must check before comment check
     if (line.startsWith('## ')) {
-      if (currentDoc) currentDoc.summaryLine = line.slice(3).trim();
+      if (currentDoc) {
+        if (currentDoc.summaryFrom === 'summary') {
+          parseErrors.push(`line ${i + 1}: summary given twice — @summary and ## line (keep one)`);
+        } else {
+          currentDoc.summaryLine = line.slice(3).trim();
+          currentDoc.summaryFrom = '##';
+        }
+      }
       continue;
     }
 
@@ -245,6 +259,23 @@ function parseFile(filePath, content) {
         ensureDoc(i + 1);
         startBlock('links', null, i + 1);
         currentDoc.links = rest.split(',').map(s => s.trim()).filter(Boolean);
+        continue;
+      }
+
+      if (HEADER_FIELDS.has(sigilFull)) {
+        ensureDoc(i + 1);
+        const key = sigilFull === 'summary' ? 'summaryLine' : sigilFull;
+        if (!rest) {
+          parseErrors.push(`line ${i + 1}: @${sigilFull} has no text — write it on the same line`);
+        } else if (sigilFull === 'summary' && currentDoc.summaryFrom === '##') {
+          parseErrors.push(`line ${i + 1}: summary given twice — @summary and ## line (keep one)`);
+        } else if (currentDoc[key] !== null && (sigilFull !== 'summary' || currentDoc.summaryFrom === 'summary')) {
+          parseErrors.push(`line ${i + 1}: ${sigilFull} must be singular`);
+        } else {
+          currentDoc[key] = rest;
+          if (sigilFull === 'summary') currentDoc.summaryFrom = 'summary';
+        }
+        startBlock(sigilFull, null, i + 1);
         continue;
       }
 
